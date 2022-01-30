@@ -77,6 +77,15 @@ const editProduct = async (req, res) => {
   res.json(updatedProduct);
 };
 
+const deleteProduct = async (req, res) => {
+  const { id } = req.params;
+
+  const deletedProduct = await productModel.getById(id);
+  await productModel.remove(id);
+
+  res.json(deletedProduct);
+};
+
 module.exports = {
   productsValidation,
   productAlreadyExists,
@@ -85,4 +94,5 @@ module.exports = {
   getAllProducts,
   productDontExists,
   editProduct,
+  deleteProduct,
 };
