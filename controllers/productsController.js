@@ -59,6 +59,8 @@ const getProductById = async (req, res) => {
 
   const getProduct = await productModel.getById(params.id);
 
+  if (!getProduct) return res.status(404).json({ message: 'Product not found' });
+
   return res.json(getProduct);
 };
 

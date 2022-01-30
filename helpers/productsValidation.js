@@ -6,7 +6,7 @@ function NameValidation(name) {
 }
 
 function QuantityValidation(quantity) {
-  if (!quantity && quantity !== 0) return { code: 400, message: 'quantity is required' };
+  if (!quantity && quantity !== 0) return { code: 400, message: '"quantity" is required' };
   if (typeof quantity !== 'number' || quantity < 1) {
     return { code: 422, message: '"quantity" must be a number larger than or equal to 1' };
   }
