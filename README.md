@@ -24,10 +24,12 @@ Aqui você vai encontrar os detalhes de como estruturar o desenvolvimento do seu
   - [Conexão com o Banco](#conexão-com-o-banco)
   - [Tabelas](#tabelas)
 - [Requisitos do projeto](#requisitos-do-projeto)
+
   - [Linter](#linter)
   - [Lista de requisitos](#lista-de-requisitos)
 
     `Obrigatórios`
+
     - [1 - Crie um endpoint para o cadastro de produtos](#1---crie-um-endpoint-para-o-cadastro-de-produtos)
     - [2 - Crie um endpoint para listar os produtos](#2---crie-um-endpoint-para-listar-os-produtos)
     - [3 - Crie um endpoint para atualizar um produto](#3---crie-um-endpoint-para-atualizar-um-produto)
@@ -45,6 +47,7 @@ Aqui você vai encontrar os detalhes de como estruturar o desenvolvimento do seu
     - [12 - Valide a quantidade de produtos](#12---valide-a-quantidade-de-produtos)
     - [13 - Escreva testes para cobrir 50% das camadas da sua aplicação](#13---escreva-testes-para-cobrir-50-das-camadas-da-sua-aplicação)
     - [14 - Escreva testes para cobrir 60% das camadas da sua aplicação](#14---escreva-testes-para-cobrir-60-das-camadas-da-sua-aplicação)
+
 - [Depois de terminar o desenvolvimento](#depois-de-terminar-o-desenvolvimento)
 - [Revisando um pull request](#revisando-um-pull-request)
 - [Avisos Finais](#avisos-finais)
@@ -109,8 +112,8 @@ Você deve utilizar o banco MySQL para a gestão de dados. Além disso, a API de
 
 ## Data de Entrega
 
-  - Serão `3` dias de projeto.
-  - Data de entrega para avaliação final do projeto: `03/02/2022 - 14:00h`.
+- Serão `3` dias de projeto.
+- Data de entrega para avaliação final do projeto: `03/02/2022 - 14:00h`.
 
 ---
 
@@ -171,18 +174,18 @@ Atenção :warning: Não rode o comando npm audit fix! Ele atualiza várias depe
 
 ## Durante o desenvolvimento
 
-* ⚠ **PULL REQUESTS COM ISSUES NO LINTER NÃO SERÃO AVALIADAS, ATENTE-SE PARA RESOLVÊ-LAS ANTES DE FINALIZAR O DESENVOLVIMENTO!** ⚠
+- ⚠ **PULL REQUESTS COM ISSUES NO LINTER NÃO SERÃO AVALIADAS, ATENTE-SE PARA RESOLVÊ-LAS ANTES DE FINALIZAR O DESENVOLVIMENTO!** ⚠
 
-* Faça `commits` das alterações que você fizer no código regularmente
+- Faça `commits` das alterações que você fizer no código regularmente
 
-* Lembre-se de sempre após um (ou alguns) `commits` atualizar o repositório remoto
+- Lembre-se de sempre após um (ou alguns) `commits` atualizar o repositório remoto
 
-* Os comandos que você utilizará com mais frequência são:
+- Os comandos que você utilizará com mais frequência são:
   1. `git status` _(para verificar o que está em vermelho - fora do stage - e o que está em verde - no stage)_
   2. `git add` _(para adicionar arquivos ao stage do Git)_
   3. `git commit` _(para criar um commit com os arquivos que estão no stage do Git)_
-  5. `git push -u nome-da-branch` _(para enviar o commit para o repositório remoto na primeira vez que fizer o `push` de uma nova branch)_
-  4. `git push` _(para enviar o commit para o repositório remoto após o passo anterior)_
+  4. `git push -u nome-da-branch` _(para enviar o commit para o repositório remoto na primeira vez que fizer o `push` de uma nova branch)_
+  5. `git push` _(para enviar o commit para o repositório remoto após o passo anterior)_
 
 ---
 
@@ -223,7 +226,7 @@ Atenção :warning: Não rode o comando npm audit fix! Ele atualiza várias depe
 Há um arquivo `index.js` no repositório. Não remova, nele, o seguinte trecho de código:
 
 ```javascript
-app.get('/', (request, response) => {
+app.get("/", (request, response) => {
   response.send();
 });
 ```
@@ -241,6 +244,7 @@ const connection = mysql.createPool({
   password: process.env.MYSQL_PASSWORD,
 });
 ```
+
 Para os testes rodarem corretamente, na raiz do projeto **renomeie o arquivo `.env.example` para `.env`** com as variáveis de ambiente. Por exemplo, caso o seu usuário SQL seja `nome` e a senha `1234` seu arquivo ficará desta forma:
 
 ```sh
@@ -277,7 +281,6 @@ A tabela `sales_products`, é a tabela que faz o relacionamento `N:N` entre `pro
 
 ![Tabela Vendas-Produtos](./public/tablesalesproducts.png)
 
-
 # Requisitos do projeto
 
 ## Linter
@@ -311,10 +314,10 @@ Para poder executar os testes basta executar comando `npm tests` e o resultado s
 Especialmente no início, quando a maioria dos testes está falhando, a saída após executar os testes é bastante poluída. Você pode desabilitar temporariamente um teste utilizando a função `skip` junto à função `it`. Como o nome indica, esta função "pula" um teste:
 
 ```js
-it.skip('it includes the text `Movie Cards Library` inside a h1 tag', () => {
+it.skip("it includes the text `Movie Cards Library` inside a h1 tag", () => {
   wrapper = shallow(<Header />);
 
-  expect(wrapper.find('header h1').text()).toBe('Movie Cards Library');
+  expect(wrapper.find("header h1").text()).toBe("Movie Cards Library");
 });
 ```
 
@@ -357,57 +360,56 @@ Uma estratégia é pular todos os testes no início e ir implementando um teste 
       { "message": "\"name\" is required" }          
     ```
 
-  - Quando a requisição é feita e contém o seguinte `body`:
+- Quando a requisição é feita e contém o seguinte `body`:
+  ```json
+  { "name": "pro", "quantity": 100 }
+  ```
+  - sua API deve responder com status http `422` e o seguinte `body`:
+  ```json
+  { "message": "\"name\" length must be at least 5 characters long" }
+  ```
+- Quando a requisição é feita com o atributo `name` igual um já cadastrado:
+  ```json
+  { "name": "produto", "quantity": 100 }
+  ```
+  - sua API deve responder com status http `409` e o seguinte `body`:
+  ```json
+  { "message": "Product already exists" }
+  ```
+
+> :point_right: Para o endpoint `POST /products`, o campo`quantity` deve ser um número inteiro maior que 0.
+
+- Quando a requisição é feita sem o atributo `quantity` :
+
+  ```json
+  { "name": "produto" }
+  ```
+
+  - sua API deve responder com status http `400` e o seguinte `body`:
     ```json
-      { "name": "pro", "quantity": 100 }
-    ```
-    - sua API deve responder com status http `422` e o seguinte `body`:
-    ```json
-      { "message": "\"name\" length must be at least 5 characters long" }          
-    ```
-  - Quando a requisição é feita com o atributo `name` igual um já cadastrado:
-    ```json
-      { "name": "produto", "quantity": 100 }
-    ```
-    - sua API deve responder com status http `409` e o seguinte `body`:
-    ```json
-      { "message": "Product already exists" }          
+    { "message": "\"quantity\" is required" }
     ```
 
-  > :point_right: Para o endpoint `POST /products`, o campo`quantity` deve ser um número inteiro maior que 0.
-  - Quando a requisição é feita sem o atributo `quantity` :
-    ```json
-      { "name": "produto" }
-    ```
-    - sua API deve responder com status http `400` e o seguinte `body`:
-      ```json
-        { "message": "\"quantity\" is required" }          
-      ```
+- Quando a requisição é feita e contém os seguintes `body`:
+  ```json
+  { "name": "produto", "quantity": "string" }
+  ```
+  ```json
+  { "name": "produto", "quantity": -1 }
+  ```
+  ```json
+  { "name": "produto", "quantity": 0 }
+  ```
+  - sua API deve responder com status http `422` e o seguinte `body`:
+  ```json
+  { "message": "\"quantity\" must be a number larger than or equal to 1" }
+  ```
 
-  - Quando a requisição é feita e contém os seguintes `body`:
-    ```json
-      { "name": "produto", "quantity": "string" }
-    ```         
-    ```json
-      { "name": "produto", "quantity": -1 }
-    ```
-    ```json
-      { "name": "produto", "quantity": 0 }
-    ```
-    - sua API deve responder com status http `422` e o seguinte `body`:
-    ```json
-      { "message": "\"quantity\" must be a number larger than or equal to 1" }           
-    ```
+> :point_right: Para o endpoint `POST /products`, quando a requisição é feita corretamente, o produto deve ser cadastrado.
 
-  > :point_right: Para o endpoint `POST /products`, quando a requisição é feita corretamente, o produto deve ser cadastrado.
-  - Quando a requisição é feita e contém o seguinte `body`:
-    ```json
-      { "name": "produto", "quantity": 10 }
-    ```
-    - sua API deve responder com status http `201` e o seguinte `body`:
-    ```json
-      { "id": 1, "name": "produto", "quantity": 10 }          
-    ```
+- Quando a requisição é feita e contém o seguinte `body`:
+`json { "name": "produto", "quantity": 10 } ` - sua API deve responder com status http `201` e o seguinte `body`:
+`json { "id": 1, "name": "produto", "quantity": 10 } `
 </details>
 
 ---
@@ -424,38 +426,40 @@ Uma estratégia é pular todos os testes no início e ir implementando um teste 
   <summary>O que será validado</summary>
   <br>
 
-  > :point_right: Para o endpoint `GET /products`, será validado que todos produtos estão sendo retornados.
-  - sua API deve responder com status http `200` e o seguinte `body`:
+> :point_right: Para o endpoint `GET /products`, será validado que todos produtos estão sendo retornados.
+
+- sua API deve responder com status http `200` e o seguinte `body`:
+
+```json
+[
+  {
+    "id": 1,
+    "name": "produto A",
+    "quantity": 10
+  },
+  {
+    "id": 2,
+    "name": "produto B",
+    "quantity": 20
+  }
+]
+```
+
+> :point_right: Para o endpoint `GET /products/:id`, será validado que é possível listar um determinado produto.
+
+- sua API deve responder com status http `200` e o seguinte `body`:
   ```json
-    [
-      {
-        "id": 1,
-        "name": "produto A",
-        "quantity": 10
-      },
-      {
-        "id": 2,
-        "name": "produto B",
-        "quantity": 20
-      }
-    ]
+  {
+    "id": 1,
+    "name": "produto A",
+    "quantity": 10
+  }
   ```
 
-  > :point_right: Para o endpoint `GET /products/:id`, será validado que é possível listar um determinado produto.
-  - sua API deve responder com status http `200` e o seguinte `body`:
-    ```json
-      {
-        "id": 1,
-        "name": "produto A",
-        "quantity": 10
-      }
-    ```
-  
-  > :point_right: Para o endpoint `GET /products/:id`, será validado que não é possível listar um produto que não existe.
-  - sua API deve responder com status http `404` e o seguinte `body`:
-    ```json
-      { "message": "Product not found" }
-    ```
+> :point_right: Para o endpoint `GET /products/:id`, será validado que não é possível listar um produto que não existe.
+
+- sua API deve responder com status http `404` e o seguinte `body`:
+`json { "message": "Product not found" } `
 </details>
 
 ---
@@ -491,37 +495,38 @@ Uma estratégia é pular todos os testes no início e ir implementando um teste 
       { "message": "\"name\" length must be at least 5 characters long" }          
     ```
 
-  > :point_right: Para o endpoint `PUT /products/:id`, o campo`quantity` deve ser um número inteiro maior que 0.
-  - Quando a requisição é feita e contém os seguintes `body`:
-    ```json
-      { "name": "produto", "quantity": "string" }
-    ```         
-    ```json
-      { "name": "produto", "quantity": -1 }
-    ```
-    ```json
-      { "name": "produto", "quantity": 0 }
-    ```
-    - sua API deve responder com status http `422` e o seguinte `body`:
-    ```json
-      { "message": "\"quantity\" must be a number larger than or equal to 1" }           
-    ```
+> :point_right: Para o endpoint `PUT /products/:id`, o campo`quantity` deve ser um número inteiro maior que 0.
 
-  > :point_right: Para o endpoint `PUT /products/:id`, quando a requisição é feita corretamente, o produto deve ser alterado.
-  - Quando a requisição é feita e contém o seguinte `body`: 
-    ```json
-      { "name": "produto", "quantity": 15 }
-    ```
-    - sua API deve responder com status http `200` e o seguinte `body`:
-    ```json
-      { "id": 1, "name": "produto", "quantity": 15 }          
-    ```
-  
-  > :point_right: Para o endpoint `PUT /products/:id`, será validado que não é possível alterar um produto que não existe.
-  - sua API deve responder com status http `404` e o seguinte `body`:
-    ```json
-      { "message": "Product not found" }
-    ```
+- Quando a requisição é feita e contém os seguintes `body`:
+  ```json
+  { "name": "produto", "quantity": "string" }
+  ```
+  ```json
+  { "name": "produto", "quantity": -1 }
+  ```
+  ```json
+  { "name": "produto", "quantity": 0 }
+  ```
+  - sua API deve responder com status http `422` e o seguinte `body`:
+  ```json
+  { "message": "\"quantity\" must be a number larger than or equal to 1" }
+  ```
+
+> :point_right: Para o endpoint `PUT /products/:id`, quando a requisição é feita corretamente, o produto deve ser alterado.
+
+- Quando a requisição é feita e contém o seguinte `body`:
+  ```json
+  { "name": "produto", "quantity": 15 }
+  ```
+  - sua API deve responder com status http `200` e o seguinte `body`:
+  ```json
+  { "id": 1, "name": "produto", "quantity": 15 }
+  ```
+
+> :point_right: Para o endpoint `PUT /products/:id`, será validado que não é possível alterar um produto que não existe.
+
+- sua API deve responder com status http `404` e o seguinte `body`:
+`json { "message": "Product not found" } `
 </details>
 
 ---
@@ -536,21 +541,22 @@ Uma estratégia é pular todos os testes no início e ir implementando um teste 
   <summary>O que será validado</summary>
   <br>
 
-  > :point_right: Para o endpoint `DELETE /products/:id`, será validado que é possível deletar um produto com sucesso.
-  - sua API deve responder com status http `200` e o seguinte `body`:
-  ```json
-    {
-      "id": 1,
-      "name": "produto A",
-      "quantity": 10
-    }
-  ```
+> :point_right: Para o endpoint `DELETE /products/:id`, será validado que é possível deletar um produto com sucesso.
 
-  > :point_right: Para o endpoint `DELETE /products/:id`, será validado que não é possível deletar um produto que não existe.
-  - sua API deve responder com status http `404` e o seguinte `body`:
-    ```json
-      { "message": "Product not found" }
-    ```
+- sua API deve responder com status http `200` e o seguinte `body`:
+
+```json
+{
+  "id": 1,
+  "name": "produto A",
+  "quantity": 10
+}
+```
+
+> :point_right: Para o endpoint `DELETE /products/:id`, será validado que não é possível deletar um produto que não existe.
+
+- sua API deve responder com status http `404` e o seguinte `body`:
+`json { "message": "Product not found" } `
 </details>
 
 ---
@@ -569,7 +575,7 @@ Uma estratégia é pular todos os testes no início e ir implementando um teste 
 [
   {
     "product_id": "product_id",
-    "quantity": "product_quantity",
+    "quantity": "product_quantity"
   }
 ]
 ```
@@ -592,103 +598,82 @@ Uma estratégia é pular todos os testes no início e ir implementando um teste 
       { "message": "\"product_id\" is required" }          
     ```
 
-  > :point_right: Para o endpoint `POST /sales`, o campo`quantity` deve ser um número inteiro maior que 0.
-  - Quando a requisição é feita sem o atributo `quantity` :
-    ```json
-      [
-        {
-          "product_id": 1
-        }
-      ]
-    ```
-    - sua API deve responder com status http `400` e o seguinte `body`:
-      ```json
-        { "message": "\"quantity\" is required" }          
-      ```
+> :point_right: Para o endpoint `POST /sales`, o campo`quantity` deve ser um número inteiro maior que 0.
 
-  - Quando a requisição é feita e contém os seguintes `body`:
+- Quando a requisição é feita sem o atributo `quantity` :
+
+  ```json
+  [
+    {
+      "product_id": 1
+    }
+  ]
+  ```
+
+  - sua API deve responder com status http `400` e o seguinte `body`:
     ```json
-      [
-        {
-          "product_id": 1,
-          "quantity": -1
-        }
-      ]
-    ```         
-    ```json
-      [
-        {
-          "product_id": 1,
-          "quantity": 0
-        }
-      ]
-    ```
-    ```json
-      [
-        {
-          "product_id": 1,
-          "quantity": "string"
-        }
-      ]
-    ```
-    - sua API deve responder com status http `422` e o seguinte `body`:
-    ```json
-      { "message": "\"quantity\" must be a number larger than or equal to 1" }           
+    { "message": "\"quantity\" is required" }
     ```
 
-  > :point_right: Para o endpoint `POST /sales`, quando a requisição é feita corretamente, o produto deve ser cadastrado.
-  - Quando a requisição é feita e contém o seguinte `body`:
-    ```json
-      [
-        {
-          "product_id": 1,
-          "quantity": 3
-        }
-      ]
-    ```
-    - sua API deve responder com status http `201` e o seguinte `body`:
-    ```json
+- Quando a requisição é feita e contém os seguintes `body`:
+  ```json
+  [
+    {
+      "product_id": 1,
+      "quantity": -1
+    }
+  ]
+  ```
+  ```json
+  [
+    {
+      "product_id": 1,
+      "quantity": 0
+    }
+  ]
+  ```
+  ```json
+  [
+    {
+      "product_id": 1,
+      "quantity": "string"
+    }
+  ]
+  ```
+  - sua API deve responder com status http `422` e o seguinte `body`:
+  ```json
+  { "message": "\"quantity\" must be a number larger than or equal to 1" }
+  ```
+
+> :point_right: Para o endpoint `POST /sales`, quando a requisição é feita corretamente, o produto deve ser cadastrado.
+
+- Quando a requisição é feita e contém o seguinte `body`:
+  ```json
+  [
+    {
+      "product_id": 1,
+      "quantity": 3
+    }
+  ]
+  ```
+  - sua API deve responder com status http `201` e o seguinte `body`:
+  ```json
+  {
+    "id": 1,
+    "itemsSold": [
       {
-        "id": 1,
-        "itemsSold": [
-          {
-            "product_id": 1,
-            "quantity": 3
-          }
-        ]
-      }          
-    ```
+        "product_id": 1,
+        "quantity": 3
+      }
+    ]
+  }
+  ```
 
-  > :point_right: Para o endpoint `POST /sales`, quando a requisição é feita corretamente, a venda deve ser cadastrada.
-  - Quando a requisição é feita e contém o seguinte `body`:
-    ```json
-      [
-        {
-          "product_id": 1,
-          "quantity": 2
-        },
-        {
-          "product_id": 2,
-          "quantity": 5
-        }
-      ]
-    ```
-    - sua API deve responder com status http `201` e o seguinte `body`:
-    ```json
-      {
-        "id": 1,
-        "itemsSold": [
-          {
-            "product_id": 1,
-            "quantity": 2
-          },
-          {
-            "product_id": 2,
-            "quantity": 5
-          }
-        ]
-      }          
-    ```
+> :point_right: Para o endpoint `POST /sales`, quando a requisição é feita corretamente, a venda deve ser cadastrada.
+
+- Quando a requisição é feita e contém o seguinte `body`:
+`json [ { "product_id": 1, "quantity": 2 }, { "product_id": 2, "quantity": 5 } ] ` - sua API deve responder com status http `201` e o seguinte `body`:
+`json { "id": 1, "itemsSold": [ { "product_id": 1, "quantity": 2 }, { "product_id": 2, "quantity": 5 } ] } `
 </details>
 
 ---
@@ -705,47 +690,49 @@ Uma estratégia é pular todos os testes no início e ir implementando um teste 
   <summary>O que será validado</summary>
   <br>
 
-  > :point_right: Para o endpoint `GET /sales`, será validado que todas vendas estão sendo retornados.
-  - sua API deve responder com status http `200` e o seguinte `body`:
+> :point_right: Para o endpoint `GET /sales`, será validado que todas vendas estão sendo retornados.
+
+- sua API deve responder com status http `200` e o seguinte `body`:
+
+```json
+[
+  {
+    "saleId": 1,
+    "date": "2021-09-09T04:54:29.000Z",
+    "product_id": 1,
+    "quantity": 2
+  },
+  {
+    "saleId": 1,
+    "date": "2021-09-09T04:54:54.000Z",
+    "product_id": 2,
+    "quantity": 2
+  }
+]
+```
+
+> :point_right: Para o endpoint `GET /sales/:id`, será validado que é possível listar uma determinada venda.
+
+- sua API deve responder com status http `200` e o seguinte `body`:
   ```json
-    [
-      {
-        "saleId": 1,
-        "date": "2021-09-09T04:54:29.000Z",
-        "product_id": 1,
-        "quantity": 2
-      },
-      {
-        "saleId": 1,
-        "date": "2021-09-09T04:54:54.000Z",
-        "product_id": 2,
-        "quantity": 2
-      }
-    ]
+  [
+    {
+      "date": "2021-09-09T04:54:29.000Z",
+      "product_id": 1,
+      "quantity": 2
+    },
+    {
+      "date": "2021-09-09T04:54:54.000Z",
+      "product_id": 2,
+      "quantity": 2
+    }
+  ]
   ```
 
-  > :point_right: Para o endpoint `GET /sales/:id`, será validado que é possível listar uma determinada venda.
-  - sua API deve responder com status http `200` e o seguinte `body`:
-    ```json
-      [
-        { 
-          "date": "2021-09-09T04:54:29.000Z",
-          "product_id": 1,
-          "quantity": 2
-        },
-        {
-          "date": "2021-09-09T04:54:54.000Z",
-          "product_id": 2,
-          "quantity": 2
-        }
-      ]
-    ```
-  
-  > :point_right: Para o endpoint `GET /sales/:id`, será validado que não é possível listar uma venda que não existe.
-  - sua API deve responder com status http `404` e o seguinte `body`:
-    ```json
-      { "message": "Sale not found" }
-    ```
+> :point_right: Para o endpoint `GET /sales/:id`, será validado que não é possível listar uma venda que não existe.
+
+- sua API deve responder com status http `404` e o seguinte `body`:
+`json { "message": "Sale not found" } `
 </details>
 
 ---
@@ -773,86 +760,74 @@ Uma estratégia é pular todos os testes no início e ir implementando um teste 
   <summary>O que será validado</summary>
   <br>
 
-  > :point_right: Para o endpoint `PUT /sales/:id`, o campo `product_id` deve ser um _id_ de um produto anteriormente cadastrado.
-  - Quando a requisição é feita sem o atributo `product_id` :  
-    ```json
-      [
-        {
-          "quantity": 10
-        }
-      ]
-    ```
-    - sua API deve responder com status http `400` e o seguinte `body`:
-    ```json
-      { "message": "\"product_id\" is required" }          
-    ```
-  
-  > :point_right: Para o endpoint `PUT /sales/:id`, o campo `quantity` deve ser um número inteiro maior que 0.
-  - Quando a requisição é feita sem o atributo `quantity` :  
-    ```json
-      [
-        {
-          "product_id": 1
-        }
-      ]
-    ```
-    - sua API deve responder com status http `400` e o seguinte `body`:
-    ```json
-      { "message": "\"quantity\" is required" }          
-    ```
+> :point*right: Para o endpoint `PUT /sales/:id`, o campo `product_id` deve ser um \_id* de um produto anteriormente cadastrado.
 
-  - Quando a requisição é feita e contém os seguintes `body`:
-    ```json
-      [
-        {
-          "product_id": 1,
-          "quantity": -1
-        }
-      ]
-    ```         
-    ```json
-      [
-        {
-          "product_id": 1,
-          "quantity": 0
-        }
-      ]
-    ```
-    ```json
-      [
-        {
-          "product_id": 1,
-          "quantity": "string"
-        }
-      ]
-    ```
-    - sua API deve responder com status http `422` e o seguinte `body`:
-    ```json
-      { "message": "\"quantity\" must be a number larger than or equal to 1" }           
-    ```
+- Quando a requisição é feita sem o atributo `product_id` :
+  ```json
+  [
+    {
+      "quantity": 10
+    }
+  ]
+  ```
+  - sua API deve responder com status http `400` e o seguinte `body`:
+  ```json
+  { "message": "\"product_id\" is required" }
+  ```
 
-  > :point_right: Para o endpoint `PUT /sales/:id`, quando a requisição é feita corretamente, a venda deve ser alterada.
-  - Quando a requisição é feita e contém o seguinte `body`: 
-    ```json
-      [
-        {
-          "product_id": 1,
-          "quantity": 6
-        }
-      ]
-    ```
-    - sua API deve responder com status http `200` e o seguinte `body`:
-    ```json
-      {
-        "saleId": 1,
-        "itemUpdated": [
-          {
-            "product_id": 1,
-            "quantity": 6
-          }
-        ]
-      }        
-    ```
+> :point_right: Para o endpoint `PUT /sales/:id`, o campo `quantity` deve ser um número inteiro maior que 0.
+
+- Quando a requisição é feita sem o atributo `quantity` :
+
+  ```json
+  [
+    {
+      "product_id": 1
+    }
+  ]
+  ```
+
+  - sua API deve responder com status http `400` e o seguinte `body`:
+
+  ```json
+  { "message": "\"quantity\" is required" }
+  ```
+
+- Quando a requisição é feita e contém os seguintes `body`:
+  ```json
+  [
+    {
+      "product_id": 1,
+      "quantity": -1
+    }
+  ]
+  ```
+  ```json
+  [
+    {
+      "product_id": 1,
+      "quantity": 0
+    }
+  ]
+  ```
+  ```json
+  [
+    {
+      "product_id": 1,
+      "quantity": "string"
+    }
+  ]
+  ```
+  - sua API deve responder com status http `422` e o seguinte `body`:
+  ```json
+  { "message": "\"quantity\" must be a number larger than or equal to 1" }
+  ```
+
+> :point_right: Para o endpoint `PUT /sales/:id`, quando a requisição é feita corretamente, a venda deve ser alterada.
+
+- Quando a requisição é feita e contém o seguinte `body`:
+`json [ { "product_id": 1, "quantity": 6 } ] ` - sua API deve responder com status http `200` e o seguinte `body`:
+`json { "saleId": 1, "itemUpdated": [ { "product_id": 1, "quantity": 6 } ] } `
 </details>
 
 ---
@@ -869,10 +844,10 @@ Uma estratégia é pular todos os testes no início e ir implementando um teste 
   <summary>O que será validado</summary>
   <br>
 
-  > :point_right: Será validado que a cobertura total das linhas dos arquivos nas pastas `models`, `services` e `controllers` é maior ou igual a 35%.
+> :point_right: Será validado que a cobertura total das linhas dos arquivos nas pastas `models`, `services` e `controllers` é maior ou igual a 35%.
 
-  > :point_right: Será validado que ao menos 24 linhas são cobertas pelos testes.
-  
+> :point_right: Será validado que ao menos 24 linhas são cobertas pelos testes.
+
 </details>
 
 ---
@@ -889,10 +864,10 @@ Uma estratégia é pular todos os testes no início e ir implementando um teste 
   <summary>O que será validado</summary>
   <br>
 
-  > :point_right: Será validado que a cobertura total das linhas dos arquivos nas pastas `models`, `services` e `controllers` é maior ou igual a 40%.
+> :point_right: Será validado que a cobertura total das linhas dos arquivos nas pastas `models`, `services` e `controllers` é maior ou igual a 40%.
 
-  > :point_right: Será validado que ao menos 24 linhas são cobertas pelos testes.
-  
+> :point_right: Será validado que ao menos 24 linhas são cobertas pelos testes.
+
 </details>
 
 ---
@@ -909,28 +884,32 @@ Uma estratégia é pular todos os testes no início e ir implementando um teste 
   <summary>O que será validado</summary>
   <br>
 
-  > :point_right: Para o endpoint `DELETE /sales/:id`, será validado que é possível deletar uma venda com sucesso.
-  - sua API deve responder com status http `200` e o seguinte `body`:
-  ```json
-    [
-      { 
-        "date": "2021-09-09T04:54:29.000Z",
-        "product_id": 1,
-        "quantity": 2
-      },
-      {
-        "date": "2021-09-09T04:54:54.000Z",
-        "product_id": 2,
-        "quantity": 2
-      }
-    ]   
-  ```
-  
-  > :point_right: Para o endpoint `DELETE /sales/:id`, será validado que não é possível deletar uma venda que não existe. 
-  - sua API deve responder com status http `404` e o seguinte `body`:
-  ```json
-    { "message": "Sale not found" }          
-  ```
+> :point_right: Para o endpoint `DELETE /sales/:id`, será validado que é possível deletar uma venda com sucesso.
+
+- sua API deve responder com status http `200` e o seguinte `body`:
+
+```json
+[
+  {
+    "date": "2021-09-09T04:54:29.000Z",
+    "product_id": 1,
+    "quantity": 2
+  },
+  {
+    "date": "2021-09-09T04:54:54.000Z",
+    "product_id": 2,
+    "quantity": 2
+  }
+]
+```
+
+> :point_right: Para o endpoint `DELETE /sales/:id`, será validado que não é possível deletar uma venda que não existe.
+
+- sua API deve responder com status http `404` e o seguinte `body`:
+
+```json
+{ "message": "Sale not found" }
+```
 
 </details>
 
@@ -940,17 +919,17 @@ Uma estratégia é pular todos os testes no início e ir implementando um teste 
 
 - Ao realizar uma venda, atualizá-la ou deletá-la, você deve também atualizar a quantidade do produto em questão presente na tabela responsável pelos produtos;
 
-  - **Exemplo 1**: suponha que haja um produto chamado *Bola de Futebol* e a sua propriedade `quantity` tenha o valor *10*. Caso seja feita uma venda com *8* unidades desse produto, a quantidade do produto deve ser atualizada para *2* , pois 10 - 8 = 2;
-  - **Exemplo 2**: Suponha que esta venda tenha sido deletada, logo estas *8* unidades devem voltar ao `quantity` e seu valor voltará a *10*, pois 2 + 8 = 10;
+  - **Exemplo 1**: suponha que haja um produto chamado _Bola de Futebol_ e a sua propriedade `quantity` tenha o valor _10_. Caso seja feita uma venda com _8_ unidades desse produto, a quantidade do produto deve ser atualizada para _2_ , pois 10 - 8 = 2;
+  - **Exemplo 2**: Suponha que esta venda tenha sido deletada, logo estas _8_ unidades devem voltar ao `quantity` e seu valor voltará a _10_, pois 2 + 8 = 10;
 
 <details close>
   <summary>O que será validado</summary>
   <br>
 
-  > :point_right: Será validado que ao **fazer uma determinada venda**, a quantidade do produto deverá ser atualizada **também** na tabela responsável pelos produtos.
-  
-  > :point_right: Será validado que ao **deletar uma determinada venda**, a quantidade do produto deverá ser atualizada **também** na tabela responsável pelos produtos;.
- 
+> :point_right: Será validado que ao **fazer uma determinada venda**, a quantidade do produto deverá ser atualizada **também** na tabela responsável pelos produtos.
+
+> :point_right: Será validado que ao **deletar uma determinada venda**, a quantidade do produto deverá ser atualizada **também** na tabela responsável pelos produtos;.
+
 </details>
 
 ---
@@ -965,21 +944,22 @@ Uma estratégia é pular todos os testes no início e ir implementando um teste 
   <summary>O que será validado</summary>
   <br>
 
-  > :point_right: Para o endpoint `POST /sales`, será validado que a quantidade de produtos em estoque nunca seja menor que 0 (zero). 
-  - Quando a requisição é feita com uma quantidade superior a quantidade em estoque:  
-    ```json
-      [
-        {
-          "product_id": 1,
-          "quantity": 100
-        }
-      ]
-    ```
-    - sua API deve responder com status http `422` e o seguinte `body`:
-    ```json
-      { "message": "Such amount is not permitted to sell" }          
-    ```
-  
+> :point_right: Para o endpoint `POST /sales`, será validado que a quantidade de produtos em estoque nunca seja menor que 0 (zero).
+
+- Quando a requisição é feita com uma quantidade superior a quantidade em estoque:
+  ```json
+  [
+    {
+      "product_id": 1,
+      "quantity": 100
+    }
+  ]
+  ```
+  - sua API deve responder com status http `422` e o seguinte `body`:
+  ```json
+  { "message": "Such amount is not permitted to sell" }
+  ```
+
 </details>
 
 ---
@@ -996,10 +976,10 @@ Uma estratégia é pular todos os testes no início e ir implementando um teste 
   <summary>O que será validado</summary>
   <br>
 
-  > :point_right: Será validado que a cobertura total das linhas dos arquivos nas pastas `models`, `services` e `controllers` é maior ou igual a 50%.
+> :point_right: Será validado que a cobertura total das linhas dos arquivos nas pastas `models`, `services` e `controllers` é maior ou igual a 50%.
 
-  > :point_right: Será validado que ao menos 24 linhas são cobertas pelos testes.
-  
+> :point_right: Será validado que ao menos 24 linhas são cobertas pelos testes.
+
 </details>
 
 ---
@@ -1016,21 +996,22 @@ Uma estratégia é pular todos os testes no início e ir implementando um teste 
   <summary>O que será validado</summary>
   <br>
 
-  > :point_right: Será validado que a cobertura total das linhas dos arquivos nas pastas `models`, `services` e `controllers` é maior ou igual a 60%.
+> :point_right: Será validado que a cobertura total das linhas dos arquivos nas pastas `models`, `services` e `controllers` é maior ou igual a 60%.
 
-  > :point_right: Será validado que ao menos 24 linhas são cobertas pelos testes.
-  
+> :point_right: Será validado que ao menos 24 linhas são cobertas pelos testes.
+
 </details>
 
 ---
+
 ## Depois de terminar o desenvolvimento
 
 Para **"entregar"** seu projeto, siga os passos a seguir:
 
-* Vá até a página **DO SEU** _Pull Request_, adicione a label de _"code-review"_ e marque seus colegas
-  * No menu à direita, clique no _link_ **"Labels"** e escolha a _label_ **code-review**
-  * No menu à direita, clique no _link_ **"Assignees"** e escolha **o seu usuário**
-  * No menu à direita, clique no _link_ **"Reviewers"** e digite `students`, selecione o time `tryber/students-sd-00`
+- Vá até a página **DO SEU** _Pull Request_, adicione a label de _"code-review"_ e marque seus colegas
+  - No menu à direita, clique no _link_ **"Labels"** e escolha a _label_ **code-review**
+  - No menu à direita, clique no _link_ **"Assignees"** e escolha **o seu usuário**
+  - No menu à direita, clique no _link_ **"Reviewers"** e digite `students`, selecione o time `tryber/students-sd-00`
 
 Se ainda houver alguma dúvida sobre como entregar seu projeto, [aqui tem um video explicativo](https://vimeo.com/362189205).
 
