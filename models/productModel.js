@@ -6,6 +6,18 @@ const getByName = async (name) => {
   return rows[0];
 };
 
+const getById = async (id) => {
+  const [rows] = await connection.execute('SELECT * FROM products WHERE id = ?', [id]);
+
+  return rows[0];
+};
+
+const getProductList = async () => {
+  const [rows] = await connection.execute('SELECT * FROM products');
+
+  return rows;
+};
+
 const create = async ({ name, quantity }) => {
   const [rows] = await connection.execute(
     'INSERT INTO products (name, quantity) VALUES (?, ?)',
@@ -19,4 +31,4 @@ const create = async ({ name, quantity }) => {
   };
 };
 
-module.exports = { getByName, create };
+module.exports = { getByName, create, getById, getProductList };

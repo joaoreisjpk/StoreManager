@@ -1,4 +1,7 @@
-const { QuantityValidation, NameValidation } = require('../helpers/productsValidation');
+const {
+  QuantityValidation,
+  NameValidation,
+} = require('../helpers/productsValidation');
 const productModel = require('../models/productModel');
 
 const productsValidation = async (req, res, next) => {
@@ -7,11 +10,15 @@ const productsValidation = async (req, res, next) => {
   const nameValidation = NameValidation(body.name);
   const quantityValidation = QuantityValidation(body.quantity);
   if (nameValidation) {
-    return res.status(nameValidation.code).json({ message: nameValidation.message });
+    return res
+      .status(nameValidation.code)
+      .json({ message: nameValidation.message });
   }
 
   if (quantityValidation) {
-    return res.status(quantityValidation.code).json({ message: quantityValidation.message });
+    return res
+      .status(quantityValidation.code)
+      .json({ message: quantityValidation.message });
   }
 
   next();
@@ -35,4 +42,24 @@ const createProduct = async (req, res) => {
   res.status(201).json(newProduct);
 };
 
-module.exports = { productsValidation, productsExists, createProduct };
+const getProductById = async (req, res) => {
+  const { params } = req;
+
+  const getProduct = await productModel.getById(params.id);
+
+  return res.json(getProduct);
+};
+
+const getAllProducts = async (req, res) => {
+  const getProductList = await productModel.getProductList();
+
+  res.json(getProductList);
+};
+
+module.exports = {
+  productsValidation,
+  productsExists,
+  createProduct,
+  getProductById,
+  getAllProducts,
+};
