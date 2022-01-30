@@ -27,7 +27,8 @@ const create = async (salesArray) => {
 
 const getByIdQuery = `
   SELECT date, product_id, quantity
-  FROM sales JOIN sales_products
+  FROM sales
+  JOIN sales_products
   ON id = sale_id
   WHERE id = ?
 `;
@@ -40,7 +41,8 @@ const getById = async (id) => {
 
 const getProductListQuery = `
   SELECT sale_id, date, product_id, quantity
-  FROM sales JOIN sales_products
+  FROM sales
+  JOIN sales_products
   ON id = sale_id
 `;
 
@@ -50,18 +52,22 @@ const getProductList = async () => {
   return rows.map(({ sale_id: saleId, ...rest }) => ({ saleId, ...rest }));
 };
 
-const updateSaleQuery = `
+const updateQuery = `
   UPDATE sales_products
-  SET quantity = ?
+   SET quantity = ?
   WHERE sale_id = ? AND product_id = ? 
 `;
 
-const updateSale = async (saleId, data) => {
+const update = async (saleId, data) => {
   const { product_id: productId, quantity } = data;
 
-  await connection.execute(updateSaleQuery, [quantity, saleId, productId]);
+  await connection.execute(updateQuery, [quantity, saleId, productId]);
 
   return { saleId, itemUpdated: data };
 };
 
-module.exports = { create, getById, getProductList, updateSale };
+const remove = async (id) => {
+  await connection.execute('DELETE FROM sales WHERE id = ?', [id]);
+};
+
+module.exports = { create, getById, getProductList, update, remove };

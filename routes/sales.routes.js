@@ -4,6 +4,7 @@ const {
   createSale,
   getSaleById,
   getAllSales,
+  removeSale,
 } = require('../controllers/salesController');
 
 const router = Router();
@@ -15,5 +16,7 @@ router.get('/:id', getSaleById);
 router.get('/', getAllSales);
 
 router.put('/:id', salesValidation, getAllSales);
+
+router.delete('/:id', removeSale);
 
 module.exports = { router };
