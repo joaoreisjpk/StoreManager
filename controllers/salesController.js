@@ -43,4 +43,10 @@ const getSaleById = async (req, res) => {
   return res.json(getProduct);
 };
 
-module.exports = { salesValidation, createSale, getSaleById };
+const getAllSales = async (req, res) => {
+  const getProductList = await salesModel.getProductList();
+
+  res.json(getProductList);
+};
+
+module.exports = { salesValidation, createSale, getSaleById, getAllSales };

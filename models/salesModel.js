@@ -25,6 +25,19 @@ const create = async (salesArray) => {
   };
 };
 
+const getByIdQuery = `
+  SELECT date, product_id, quantity
+  FROM sales JOIN sales_products
+  ON id = sale_id
+  WHERE id = ?
+`;
+
+const getById = async (id) => {
+  const [rows] = await connection.execute(getByIdQuery, [id]);
+
+  return rows;
+};
+
 const getProductListQuery = `
   SELECT sale_id, date, product_id, quantity
   FROM sales JOIN sales_products
@@ -37,4 +50,4 @@ const getProductList = async () => {
   return rows.map(({ sale_id: saleId, ...rest }) => ({ saleId, ...rest }));
 };
 
-module.exports = { create, getProductList };
+module.exports = { create, getById, getProductList };
