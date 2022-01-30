@@ -24,13 +24,25 @@ const productsValidation = async (req, res, next) => {
   next();
 };
 
-const productsExists = async (req, res, next) => {
+const productAlreadyExists = async (req, res, next) => {
   const { name } = req.body;
 
   const foundProduct = await productModel.getByName(name);
 
   if (foundProduct) {
     return res.status(409).json({ message: 'Product already exists' });
+  }
+
+  next();
+};
+
+const productDontExists = async (req, res, next) => {
+  const { id } = req.params;
+
+  const foundProduct = await productModel.getById(id);
+
+  if (!foundProduct) {
+    return res.status(404).json({ message: 'Product not found' });
   }
 
   next();
@@ -56,10 +68,21 @@ const getAllProducts = async (req, res) => {
   res.json(getProductList);
 };
 
+const editProduct = async (req, res) => {
+  const { id } = req.params;
+  const { name, quantity } = req.body;
+
+  const updatedProduct = await productModel.update({ id, name, quantity });
+
+  res.json(updatedProduct);
+};
+
 module.exports = {
   productsValidation,
-  productsExists,
+  productAlreadyExists,
   createProduct,
   getProductById,
   getAllProducts,
+  productDontExists,
+  editProduct,
 };
