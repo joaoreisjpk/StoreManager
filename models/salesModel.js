@@ -54,7 +54,7 @@ const getProductList = async () => {
 
 const updateQuery = `
   UPDATE sales_products
-   SET quantity = ?
+  SET quantity = ?
   WHERE sale_id = ? AND product_id = ? 
 `;
 
