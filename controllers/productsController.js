@@ -32,7 +32,7 @@ const productsExists = async (req, res, next) => {
 const createProduct = async (req, res) => {
   const { name, quantity } = req.body;
   const newProduct = await productModel.create({ name, quantity });
-  res.status(200).json(newProduct);
+  res.status(201).json(newProduct);
 };
 
 module.exports = { productsValidation, productsExists, createProduct };
