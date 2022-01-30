@@ -59,7 +59,7 @@ const updateQuery = `
 `;
 
 const update = async (saleId, data) => {
-  const { product_id: productId, quantity } = data;
+  const { product_id: productId, quantity } = data[0];
 
   await connection.execute(updateQuery, [quantity, saleId, productId]);
 

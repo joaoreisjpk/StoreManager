@@ -3,6 +3,7 @@ const {
   ProductIdValidation,
 } = require('../helpers/salesValidation');
 const salesModel = require('../models/salesModel');
+const salesService = require('../services/salesService');
 
 const salesValidation = async (req, res, next) => {
   const { body } = req;
@@ -29,8 +30,10 @@ const salesValidation = async (req, res, next) => {
 
 const createSale = async (req, res) => {
   const { body } = req;
-  const newProduct = await salesModel.create(body);
-  res.status(201).json(newProduct);
+
+  const newProduct = await salesService.createSale(body);
+
+  res.status(newProduct.code).json(newProduct.data);
 };
 
 const getSaleById = async (req, res) => {
@@ -51,9 +54,9 @@ const getAllSales = async (req, res) => {
 
 const editSale = async (req, res) => {
   const { id } = req.params;
-  const updateSale = await salesModel.update(id, req.body);
+  const updateSale = await salesService.updateSale(id, req.body);
 
-  return res.status(200).json(updateSale);
+  return res.status(updateSale.code).json(updateSale.data);
 };
 
 const removeSale = async (req, res) => {
@@ -63,7 +66,7 @@ const removeSale = async (req, res) => {
 
   if (!getProduct.length) return res.status(404).json({ message: 'Sale not found' });
 
-  await salesModel.remove(id);
+  await salesService.deleteSale(id, getProduct);
 
   return res.json(getProduct);
 };

@@ -4,6 +4,7 @@ const {
   createSale,
   getSaleById,
   getAllSales,
+  editSale,
   removeSale,
 } = require('../controllers/salesController');
 
@@ -15,7 +16,7 @@ router.get('/:id', getSaleById);
 
 router.get('/', getAllSales);
 
-router.put('/:id', salesValidation, getAllSales);
+router.put('/:id', salesValidation, editSale);
 
 router.delete('/:id', removeSale);
 
