@@ -33,4 +33,14 @@ const createSale = async (req, res) => {
   res.status(201).json(newProduct);
 };
 
-module.exports = { salesValidation, createSale };
+const getSaleById = async (req, res) => {
+  const { params } = req;
+
+  const getProduct = await salesModel.getById(params.id);
+
+  if (!getProduct.length) return res.status(404).json({ message: 'Product not found' });
+
+  return res.json(getProduct);
+};
+
+module.exports = { salesValidation, createSale, getSaleById };

@@ -25,4 +25,16 @@ const create = async (salesArray) => {
   };
 };
 
-module.exports = { create };
+const getProductListQuery = `
+  SELECT sale_id, date, product_id, quantity
+  FROM sales JOIN sales_products
+  ON id = sale_id
+`;
+
+const getProductList = async () => {
+  const [rows] = await connection.execute(getProductListQuery);
+
+  return rows.map(({ sale_id: saleId, ...rest }) => ({ saleId, ...rest }));
+};
+
+module.exports = { create, getProductList };
