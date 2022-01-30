@@ -50,4 +50,18 @@ const getProductList = async () => {
   return rows.map(({ sale_id: saleId, ...rest }) => ({ saleId, ...rest }));
 };
 
-module.exports = { create, getById, getProductList };
+const updateSaleQuery = `
+  UPDATE sales_products
+  SET quantity = ?
+  WHERE sale_id = ? AND product_id = ? 
+`;
+
+const updateSale = async (saleId, data) => {
+  const { product_id: productId, quantity } = data;
+
+  await connection.execute(updateSaleQuery, [quantity, saleId, productId]);
+
+  return { saleId, itemUpdated: data };
+};
+
+module.exports = { create, getById, getProductList, updateSale };

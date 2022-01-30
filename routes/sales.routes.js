@@ -14,4 +14,6 @@ router.get('/:id', getSaleById);
 
 router.get('/', getAllSales);
 
+router.put('/:id', salesValidation, getAllSales);
+
 module.exports = { router };
