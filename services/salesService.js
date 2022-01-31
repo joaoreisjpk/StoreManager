@@ -2,29 +2,29 @@ const salesModel = require('../models/salesModel');
 const productModel = require('../models/productModel');
 
 const createSale = async (data) => {
-  const { product_id: id, saleQuantity } = data[0];
+  const { product_id: id, quantity: saleQuantity } = data[0];
 
-  const { quantity, name } = await productModel.getById(id);
+  const { quantity: stockQuantity, name } = await productModel.getById(id);
 
-  if (data[0].quantity > quantity) {
+  if (saleQuantity > stockQuantity) {
     return { code: 422, data: { message: 'Such amount is not permitted to sell' } };
   }
+  console.log(stockQuantity, saleQuantity, stockQuantity - saleQuantity);
 
   await productModel.update({
     id,
     name,
-    quantity: quantity - saleQuantity,
+    quantity: stockQuantity - saleQuantity,
   });
   const newSale = await salesModel.create(data);
 
   return { code: 201, data: newSale };
 };
 
-const updateSale = async (id, data) => {
-  const { product_id: productId, saleQuantity } = data[0];
+const updateSale = async (id, data, salesArray) => {
+  const { product_id: productId, quantity: saleQuantity } = data[0];
 
-  const { stockQuantity, name } = await productModel.getById(productId);
-  const salesArray = await salesModel.getById(id);
+  const { quantity: stockQuantity, name } = await productModel.getById(productId);
 
   const { quantity } = salesArray.find((item) => item.product_id === productId);
 
@@ -46,7 +46,8 @@ const updateSale = async (id, data) => {
 const deleteSale = async (id, data) => {
   const { product_id: productId, quantity } = data[0];
 
-  const { stockQuantity, name } = await productModel.getById(productId);
+  const { quantity: stockQuantity, name } = await productModel.getById(productId);
+  console.log(stockQuantity, quantity, stockQuantity + quantity);
 
   await productModel.update({
     id: productId,
@@ -58,3 +59,37 @@ const deleteSale = async (id, data) => {
 };
 
 module.exports = { createSale, deleteSale, updateSale };
+
+/* [
+{
+  "id": 1,
+  "name": "mengão",
+  "quantity": 0
+},
+{
+  "id": 2,
+  "name": "tricampeonato",
+  "quantity": 0
+},
+{
+  "id": 3,
+  "name": "hexacampeao",
+  "quantity": 0
+}
+] */
+/* 
+[
+{
+  "product_id": 3,
+  "quantity": 100
+},
+{
+  "product_id": 2,
+  "quantity": 100
+},
+{
+  "product_id": 3,
+  "quantity": 100
+}
+]
+*/

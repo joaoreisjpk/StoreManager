@@ -54,7 +54,12 @@ const getAllSales = async (req, res) => {
 
 const editSale = async (req, res) => {
   const { id } = req.params;
-  const updateSale = await salesService.updateSale(id, req.body);
+
+  const salesArray = await salesModel.getById(id);
+
+  if (!salesArray.length) return res.status(404).json({ message: 'Sale not found' });
+
+  const updateSale = await salesService.updateSale(id, req.body, salesArray);
 
   return res.status(updateSale.code).json(updateSale.data);
 };
