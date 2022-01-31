@@ -17,7 +17,7 @@ const createSale = async (data) => {
   });
   const newSale = await salesModel.create(data);
 
-  return { code: 200, data: newSale };
+  return { code: 201, data: newSale };
 };
 
 const updateSale = async (id, data) => {
