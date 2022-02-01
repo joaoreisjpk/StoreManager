@@ -61,7 +61,7 @@ const getProductById = async (req, res) => {
 
   if (!getProduct) return res.status(404).json({ message: 'Product not found' });
 
-  return res.json(getProduct);
+  return res.status(200).json(getProduct);
 };
 
 const getAllProducts = async (req, res) => {

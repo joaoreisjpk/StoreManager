@@ -4,6 +4,7 @@ const { expect } = require("chai");
 const productsController = require("../../controllers/productsController");
 const salesController = require("../../controllers/salesController");
 const productModel = require("../../models/productModel");
+const object = require("@hapi/joi/lib/types/object");
 
 const product = {
   noName: { quantity: 2 },
@@ -12,7 +13,7 @@ const product = {
   invalidQuantity: { name: "Outro Produto", quantity: "letra" },
   correct: { name: "Primeiro Produto", quantity: 4 },
   returnCreate: { id: 1, name: "Primeiro Produto", quantity: 4 },
-  returnUptade: { id: 1, name: "Produto Atualizado", quantity: 400 },
+  returnUpdate: { id: 1, name: "Produto Atualizado", quantity: 400 },
 };
 
 describe("When calling productsValidation", () => {
@@ -20,6 +21,7 @@ describe("When calling productsValidation", () => {
     const response = {};
     const request = {};
     const next = sinon.stub().returns();
+    console.log('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA \n', next.calledOnce)
 
     const message = { message: '"name" is required' };
 
@@ -211,12 +213,251 @@ describe("When calling productAlreadyExists", () => {
       productModel.getByName.restore();
     });
 
-    it("should return the status code 409", async () => {
+    it("should call next function", async () => {
       await productsController.productAlreadyExists(request, response, next);
 
       expect(response.status.calledWith(409)).to.be.false;
       expect(response.json.calledWith(message)).to.be.false;
       expect(next.calledWith()).to.be.true;
+    });
+  });
+});
+
+describe("When calling productDontExists", () => {
+  describe("and it dont exists", () => {
+    const next = sinon.stub().returns();
+
+    const message = { message: "Product not found" };
+    const request = {};
+    const response = {};
+
+    before(() => {
+      request.params = { id: 1 };
+
+      response.status = sinon.stub().returns(response);
+      response.json = sinon.stub().returns();
+
+      sinon.stub(productModel, "getById").resolves(false);
+    });
+
+    after(() => {
+      productModel.getById.restore();
+    });
+
+    it("should return the status code 404", async () => {
+      await productsController.productDontExists(request, response, next);
+
+      expect(response.status.calledWith(404)).to.be.true;
+      expect(next.calledWith()).to.be.false;
+    });
+    it('should return the message "Product not found"', async () => {
+      await productsController.productDontExists(request, response, next);
+
+      expect(response.json.calledWith(message)).to.be.true;
+      expect(next.calledWith()).to.be.false;
+    });
+  });
+  describe("and it exists", () => {
+    const next = sinon.stub().returns();
+
+    const message = { message: "Product not found" };
+    const request = {};
+    const response = {};
+
+    before(() => {
+      request.params = { id: 1 };
+
+      response.status = sinon.stub().returns(response);
+      response.json = sinon.stub().returns();
+
+      sinon.stub(productModel, "getById").resolves(true);
+    });
+
+    after(() => {
+      productModel.getById.restore();
+    });
+
+    it("should call next function", async () => {
+      await productsController.productDontExists(request, response, next);
+
+      expect(response.status.calledWith(409)).to.be.false;
+      expect(response.json.calledWith(message)).to.be.false;
+      expect(next.calledWith()).to.be.true;
+    });
+  });
+});
+
+describe("When calling createProduct", () => {
+  describe("and succeed", () => {
+    const request = {};
+    const response = {};
+
+    before(() => {
+      request.body = product.correct;
+
+      response.status = sinon.stub().returns(response);
+      response.json = sinon.stub().returns();
+
+      sinon.stub(productModel, "create").resolves(product.returnCreate);
+    });
+
+    after(() => {
+      productModel.create.restore();
+    });
+
+    it("should return the status code 201", async () => {
+      await productsController.createProduct(request, response);
+
+      expect(response.status.calledWith(201)).to.be.true;
+    });
+    it("should return the new product object", async () => {
+      const newProduct = await productsController.createProduct(
+        request,
+        response
+      );
+      console.log(newProduct);
+      expect(response.json.calledWith(product.returnCreate)).to.be.true;
+    });
+  });
+});
+
+describe("When calling getProductById", () => {
+  describe("and the product dont exists", () => {
+    const message = { message: "Product not found" };
+    const request = {};
+    const response = {};
+
+    before(() => {
+      request.params = { id: 1 };
+
+      response.status = sinon.stub().returns(response);
+      response.json = sinon.stub().returns();
+
+      sinon.stub(productModel, "getById").resolves(false);
+    });
+
+    after(() => {
+      productModel.getById.restore();
+    });
+
+    it("should return the status code 404", async () => {
+      await productsController.getProductById(request, response);
+
+      expect(response.status.calledWith(404)).to.be.true;
+    });
+    it('should return the message "Product not found"', async () => {
+      await productsController.getProductById(request, response);
+
+      expect(response.json.calledWith(message)).to.be.true;
+    });
+  });
+  describe("and the product exists", () => {
+    const message = { message: "Product not found" };
+    const request = {};
+    const response = {};
+
+    before(() => {
+      request.params = { id: 1 };
+
+      response.status = sinon.stub().returns(response);
+      response.json = sinon.stub().returns();
+
+      sinon.stub(productModel, "getById").resolves(product.returnCreate);
+    });
+
+    after(() => {
+      productModel.getById.restore();
+    });
+    it("should return the status code 404", async () => {
+      await productsController.getProductById(request, response);
+
+      expect(response.status.calledWith(200)).to.be.true;
+    });
+    it('should return the message "Product already exists"', async () => {
+      await productsController.getProductById(request, response);
+
+      expect(response.json.calledWith(product.returnCreate)).to.be.true;
+    });
+  });
+});
+
+describe("When calling getAllProducts", () => {
+  describe("and succeed", () => {
+    const request = {};
+    const response = {};
+
+    before(() => {
+      response.json = sinon.stub().returns();
+
+      sinon
+        .stub(productModel, "getProductList")
+        .resolves([product.returnCreate]);
+    });
+
+    after(() => {
+      productModel.getProductList.restore();
+    });
+
+    it("should return an array of product objects", async () => {
+      await productsController.getAllProducts(request, response);
+
+      expect(response.json.calledWith([product.returnCreate])).to.be.true;
+    });
+  });
+});
+
+describe("When calling editProduct", () => {
+  describe("and succeed", () => {
+    const request = {};
+    const response = {};
+
+    before(() => {
+      request.body = product.correct;
+      request.params = { id: 1 };
+
+      response.status = sinon.stub().returns(response);
+      response.json = sinon.stub();
+      sinon
+        .stub(productModel, "update")
+        .resolves(product.correct);
+    });
+
+    after(() => {
+      productModel.update.restore();
+    });
+
+    it("should return the updated product object", async () => {
+      await productsController.editProduct(request, response);
+      console.log();
+      expect(
+        response.json.calledWith(product.correct)).to.be.true;
+    });
+  });
+});
+
+describe("When calling deleteProduct", () => {
+  describe("and succeed", () => {
+    const request = {};
+    const response = {};
+
+    before(() => {
+      request.params = { id: 1 };
+
+      response.status = sinon.stub().returns(response);
+      response.json = sinon.stub().returns();
+
+      sinon.stub(productModel, "getById").resolves(product.returnCreate);
+      sinon.stub(productModel, "remove").resolves();
+    });
+
+    after(() => {
+      productModel.getById.restore();
+      productModel.remove.restore();
+    });
+
+    it("should return the updated product object", async () => {
+      await productsController.deleteProduct(request, response);
+      expect(response.json.calledWith(product.returnCreate)).to.be.true;
     });
   });
 });
