@@ -57,7 +57,41 @@ describe('Create a new product', () => {
       const { name, quantity } = product.correct;
       const response = await productModel.create({name, quantity});
 
-      expect(response).to.be.equal({insertId: 1, ...product.correct})
+      expect(response).to.be.equal({insertId: 1, ...product.correct});
+    });
+  });
+});
+
+describe('Update a product', () => {
+  before(async () => {
+    const execute = [{ insertId: 1 }];
+    sinon.stub(connection, 'execute').resolves(execute);
+  });
+  after(async () => {
+    connection.execute.restore();
+  });
+  describe('when succeed', () => { 
+    it('return the updated product', async () => {
+      const response = await productModel.update(product.returnUptade);
+
+      expect(response).to.be.equal(product.returnUptade);
+    });
+  });
+});
+
+describe('Remove a product', () => {
+  before(async () => {
+    const execute = [{ insertId: 1 }];
+    sinon.stub(connection, 'execute').resolves(execute);
+  });
+  after(async () => {
+    connection.execute.restore();
+  });
+  describe('when succeed', () => { 
+    it('returns void', async () => {
+      const response = await productModel.update(product.returnUptade);
+
+      expect(response).to.be.equal();
     });
   });
 });
