@@ -43,3 +43,21 @@ describe('Search for a product on DB', async() => {
     });
   });
 });
+
+describe('Create a new product', () => {
+  before(async () => {
+    const execute = [{ insertId: 1 }];
+    sinon.stub(connection, 'execute').resolves(execute);
+  });
+  after(async () => {
+    connection.execute.restore();
+  });
+  describe('when succeed', () => { 
+    it('returns the new product object', async () => {
+      const { name, quantity } = product.correct;
+      const response = await productModel.create({name, quantity});
+
+      expect(response).to.be.equal({insertId: 1, ...product.correct})
+    });
+  });
+});
