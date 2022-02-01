@@ -1,14 +1,5 @@
 const connection = require('./connection');
-
-const salesProductsValues = (salesArray, id) => {
-  let values = '';
-  salesArray.forEach(({ product_id: productId, quantity }, index) => {
-    if (index) {
-      values += `, (${id}, ${productId}, ${quantity})`;
-    } else values += `(${id}, ${productId}, ${quantity})`;
-  });
-  return values;
-};
+const { salesProductsValues } = require('../helpers');
 
 const create = async (salesArray) => {
   const [rows] = await connection.execute('INSERT INTO sales VALUES ()');
