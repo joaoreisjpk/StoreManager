@@ -1,10 +1,10 @@
 const sinon = require('sinon');
 const { expect } = require('chai');
 
+const connection = require('../../models/connection')
 const productModel = require('../../models/productModel');
 
 // Ajuda do Pr do Mannuel Boo
-
 const product = {
   correct: { name: 'Primeiro Produto', quantity: 4 },
   returnCreate: {id: 1, name: 'Primeiro Produto', quantity: 4 },
@@ -12,9 +12,9 @@ const product = {
   returnUptade: {id: 1, name: 'Produto Atualizado', quantity: 400 }
 }
 
-describe('Search for a product by their name', async() => {
+describe('Search for a product by their name', () => {
   before(async () => {
-    const execute = [product.returnCreate];
+    const execute = [[product.returnCreate]];
     sinon.stub(connection, 'execute').resolves(execute);
   });
   after(async () => {
@@ -25,14 +25,14 @@ describe('Search for a product by their name', async() => {
       const { name } = product.correct;
       const GetByName = await productModel.getByName(name);
 
-      expect(GetByName).to.be.equal(product.returnGet)
+      expect(GetByName).to.have.keys('id', 'name', 'quantity')
     });
   });
 });
 
-describe('Search for a product by their id', async() => {
+describe('Search for a product by their id', () => {
   before(async () => {
-    const execute = [product.returnCreate];
+    const execute = [[product.returnCreate]];
     sinon.stub(connection, 'execute').resolves(execute);
   });
   after(async () => {
@@ -42,12 +42,12 @@ describe('Search for a product by their id', async() => {
     it('returns an object', async () => {
       const GetById = await productModel.getById(1);
 
-      expect(GetById).to.be.equal(product.returnGet)
+      expect(GetById).to.have.keys('id', 'name', 'quantity')
     });
   });
 });
 
-describe('Search for a product by their name', async() => {
+describe('Search for a product list', () => {
   before(async () => {
     const execute = [product.returnCreate];
     sinon.stub(connection, 'execute').resolves(execute);
@@ -59,7 +59,7 @@ describe('Search for a product by their name', async() => {
     it('returns an object array', async () => {
       const GetProductList = await productModel.getProductList();
 
-      expect(GetProductList).to.be.equal([product.returnGet])
+      expect(GetProductList).to.have.keys('id', 'name', 'quantity')
     });
   });
 });
@@ -77,7 +77,7 @@ describe('Create a new product', () => {
       const { name, quantity } = product.correct;
       const response = await productModel.create({name, quantity});
 
-      expect(response).to.be.equal({insertId: 1, ...product.correct});
+      expect(response).to.have.keys('id', 'name', 'quantity')
     });
   });
 });
@@ -94,7 +94,7 @@ describe('Update a product', () => {
     it('return the updated product', async () => {
       const response = await productModel.update(product.returnUptade);
 
-      expect(response).to.be.equal(product.returnUptade);
+      expect(response).to.have.keys('id', 'name', 'quantity')
     });
   });
 });
@@ -109,7 +109,7 @@ describe('Remove a product', () => {
   });
   describe('when succeed', () => { 
     it('returns void', async () => {
-      const response = await productModel.update(product.returnUptade);
+      const response = await productModel.remove(product.returnUptade);
 
       expect(response).to.be.equal();
     });
