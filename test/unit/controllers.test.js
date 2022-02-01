@@ -25,7 +25,7 @@ describe("When calling productsValidation", () => {
 
     const message = { message: '"name" is required' };
 
-    before(() => {
+    before( async () => {
       request.body = product.noName;
 
       response.status = sinon.stub().returns(response);
@@ -56,7 +56,7 @@ describe("When calling productsValidation", () => {
       message: '"name" length must be at least 5 characters long',
     };
 
-    before(() => {
+    before( async () => {
       request.body = product.invalidName;
 
       response.status = sinon.stub().returns(response);
@@ -85,7 +85,7 @@ describe("When calling productsValidation", () => {
 
     const message = { message: '"quantity" is required' };
 
-    before(() => {
+    before( async () => {
       request.body = product.noQuantity;
 
       response.status = sinon.stub().returns(response);
@@ -116,7 +116,7 @@ describe("When calling productsValidation", () => {
       message: '"quantity" must be a number larger than or equal to 1',
     };
 
-    before(() => {
+    before( async () => {
       request.body = product.invalidQuantity;
 
       response.status = sinon.stub().returns(response);
@@ -144,7 +144,7 @@ describe("When calling productsValidation", () => {
     const response = {};
     const request = {};
 
-    before(() => {
+    before( async () => {
       request.body = product.correct;
 
       response.status = sinon.stub().returns(response);
@@ -167,7 +167,7 @@ describe("When calling productAlreadyExists", () => {
     const request = {};
     const response = {};
 
-    before(() => {
+    before( async () => {
       request.body = product.correct;
 
       response.status = sinon.stub().returns(response);
@@ -176,7 +176,7 @@ describe("When calling productAlreadyExists", () => {
       sinon.stub(productModel, "getByName").resolves(true);
     });
 
-    after(() => {
+    after(async () => {
       productModel.getByName.restore();
     });
 
@@ -200,7 +200,7 @@ describe("When calling productAlreadyExists", () => {
     const request = {};
     const response = {};
 
-    before(() => {
+    before( async () => {
       request.body = product.correct;
 
       response.status = sinon.stub().returns(response);
@@ -209,7 +209,7 @@ describe("When calling productAlreadyExists", () => {
       sinon.stub(productModel, "getByName").resolves(false);
     });
 
-    after(() => {
+    after(async () => {
       productModel.getByName.restore();
     });
 
@@ -231,7 +231,7 @@ describe("When calling productDontExists", () => {
     const request = {};
     const response = {};
 
-    before(() => {
+    before( async () => {
       request.params = { id: 1 };
 
       response.status = sinon.stub().returns(response);
@@ -240,7 +240,7 @@ describe("When calling productDontExists", () => {
       sinon.stub(productModel, "getById").resolves(false);
     });
 
-    after(() => {
+    after(async () => {
       productModel.getById.restore();
     });
 
@@ -264,7 +264,7 @@ describe("When calling productDontExists", () => {
     const request = {};
     const response = {};
 
-    before(() => {
+    before( async () => {
       request.params = { id: 1 };
 
       response.status = sinon.stub().returns(response);
@@ -273,7 +273,7 @@ describe("When calling productDontExists", () => {
       sinon.stub(productModel, "getById").resolves(true);
     });
 
-    after(() => {
+    after(async () => {
       productModel.getById.restore();
     });
 
@@ -292,7 +292,7 @@ describe("When calling createProduct", () => {
     const request = {};
     const response = {};
 
-    before(() => {
+    before( async () => {
       request.body = product.correct;
 
       response.status = sinon.stub().returns(response);
@@ -301,7 +301,7 @@ describe("When calling createProduct", () => {
       sinon.stub(productModel, "create").resolves(product.returnCreate);
     });
 
-    after(() => {
+    after(async () => {
       productModel.create.restore();
     });
 
@@ -327,7 +327,7 @@ describe("When calling getProductById", () => {
     const request = {};
     const response = {};
 
-    before(() => {
+    before( async () => {
       request.params = { id: 1 };
 
       response.status = sinon.stub().returns(response);
@@ -336,7 +336,7 @@ describe("When calling getProductById", () => {
       sinon.stub(productModel, "getById").resolves(false);
     });
 
-    after(() => {
+    after(async () => {
       productModel.getById.restore();
     });
 
@@ -356,7 +356,7 @@ describe("When calling getProductById", () => {
     const request = {};
     const response = {};
 
-    before(() => {
+    before( async () => {
       request.params = { id: 1 };
 
       response.status = sinon.stub().returns(response);
@@ -365,7 +365,7 @@ describe("When calling getProductById", () => {
       sinon.stub(productModel, "getById").resolves(product.returnCreate);
     });
 
-    after(() => {
+    after(async () => {
       productModel.getById.restore();
     });
     it("should return the status code 404", async () => {
@@ -386,7 +386,7 @@ describe("When calling getAllProducts", () => {
     const request = {};
     const response = {};
 
-    before(() => {
+    before( async () => {
       response.json = sinon.stub().returns();
 
       sinon
@@ -394,7 +394,7 @@ describe("When calling getAllProducts", () => {
         .resolves([product.returnCreate]);
     });
 
-    after(() => {
+    after(async () => {
       productModel.getProductList.restore();
     });
 
@@ -411,7 +411,7 @@ describe("When calling editProduct", () => {
     const request = {};
     const response = {};
 
-    before(() => {
+    before( async () => {
       request.body = product.correct;
       request.params = { id: 1 };
 
@@ -422,7 +422,7 @@ describe("When calling editProduct", () => {
         .resolves(product.correct);
     });
 
-    after(() => {
+    after(async () => {
       productModel.update.restore();
     });
 
@@ -440,7 +440,7 @@ describe("When calling deleteProduct", () => {
     const request = {};
     const response = {};
 
-    before(() => {
+    before( async () => {
       request.params = { id: 1 };
 
       response.status = sinon.stub().returns(response);
@@ -450,7 +450,7 @@ describe("When calling deleteProduct", () => {
       sinon.stub(productModel, "remove").resolves();
     });
 
-    after(() => {
+    after(async () => {
       productModel.getById.restore();
       productModel.remove.restore();
     });
