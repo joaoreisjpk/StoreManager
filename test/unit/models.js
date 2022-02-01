@@ -12,7 +12,7 @@ const product = {
   returnUptade: {id: 1, name: 'Produto Atualizado', quantity: 400 }
 }
 
-describe('Search for a product on DB', async() => {
+describe('Search for a product by their name', async() => {
   before(async () => {
     const execute = [product.returnCreate];
     sinon.stub(connection, 'execute').resolves(execute);
@@ -20,23 +20,43 @@ describe('Search for a product on DB', async() => {
   after(async () => {
     connection.execute.restore();
   });
-  describe('Search by their name', async () => {
-    it('returns an object', () => {
+  describe('when succeed', async () => {
+    it('returns an object', async () => {
       const { name } = product.correct;
       const GetByName = await productModel.getByName(name);
 
       expect(GetByName).to.be.equal(product.returnGet)
     });
   });
-  describe('Search by their id', async () => {
-    it('returns an object', () => {
+});
+
+describe('Search for a product by their id', async() => {
+  before(async () => {
+    const execute = [product.returnCreate];
+    sinon.stub(connection, 'execute').resolves(execute);
+  });
+  after(async () => {
+    connection.execute.restore();
+  });
+  describe('when succeed', async () => {
+    it('returns an object', async () => {
       const GetById = await productModel.getById(1);
 
       expect(GetById).to.be.equal(product.returnGet)
     });
   });
-  describe('Search all the products', async () => {
-    it('returns an object array', () => {
+});
+
+describe('Search for a product by their name', async() => {
+  before(async () => {
+    const execute = [product.returnCreate];
+    sinon.stub(connection, 'execute').resolves(execute);
+  });
+  after(async () => {
+    connection.execute.restore();
+  });
+  describe('when succeed', async () => {
+    it('returns an object array', async () => {
       const GetProductList = await productModel.getProductList();
 
       expect(GetProductList).to.be.equal([product.returnGet])
