@@ -17,3 +17,4 @@ interface basicProductResponse {
   quantity: number;
 }
 
+export { basicProduct, basicProductResponse }

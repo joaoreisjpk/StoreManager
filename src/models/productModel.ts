@@ -1,27 +1,28 @@
+import { basicProduct, basicProductResponse } from '../interfaces/IProducts';
 import connection from './connection';
 
-const getByName = async (name) => {
+const getByName = async (name: string): Promise<basicProduct> => {
   const [rows] = await connection.execute('SELECT * FROM products WHERE name = ?', [name]);
 
   return rows[0];
 };
 
-const getById = async (id) => {
-  const [rows] = await connection.execute('SELECT * FROM products WHERE id = ?', [id]);
+const getById = async (id: number): Promise<basicProduct> => {
+  const [rows]: any = await connection.execute('SELECT * FROM products WHERE id = ?', [id]);
 
   return rows[0];
 };
 
-const getProductList = async () => {
-  const [rows] = await connection.execute('SELECT * FROM products');
+const getProductList = async (): Promise<basicProductResponse[]> => {
+  const [rows]: any = await connection.execute('SELECT * FROM products');
 
   return rows;
 };
 
-const create = async ({ name, quantity }) => {
+const create = async ({ name, quantity }: basicProduct): Promise<basicProductResponse> => {
   const [rows]: any = await connection.execute(
     'INSERT INTO products (name, quantity) VALUES (?, ?)',
-      [name, quantity],
+    [name, quantity],
   );
 
   return {
@@ -31,7 +32,7 @@ const create = async ({ name, quantity }) => {
   };
 };
 
-const update = async ({ id, name, quantity }) => {
+const update = async ({ id, name, quantity }: basicProductResponse): Promise<basicProductResponse> => {
   await connection.execute(
     'UPDATE products SET name = ?, quantity = ? WHERE id = ?',
     [name, quantity, id],
@@ -40,7 +41,7 @@ const update = async ({ id, name, quantity }) => {
   return { id, name, quantity };
 };
 
-const remove = async (id) => {
+const remove = async (id: number) => {
   await connection.execute('DELETE FROM products WHERE id = ?', [id]);
 };
 
