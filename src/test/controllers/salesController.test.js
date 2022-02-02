@@ -155,7 +155,7 @@ describe("When calling createSale", () => {
 
       expect(response.status.calledWith(201)).to.be.true;
     });
-    it("should return the new product object", async () => {
+    it("should return the new sale object", async () => {
       const newSale = await salesController.createSale(request, response);
       console.log(newSale);
       expect(response.json.calledWith(sales.createSale.data)).to.be.true;
@@ -184,9 +184,63 @@ describe("When calling createSale", () => {
       expect(response.status.calledWith(422)).to.be.true;
     });
     it("should return the message 'Such amount is not permitted to sell'", async () => {
-      const newProduct = await salesController.createSale(request, response);
-      console.log(newProduct);
+      const newSale = await salesController.createSale(request, response);
+      console.log(newSale);
       expect(response.json.calledWith(sales.createFail.data)).to.be.true;
+    });
+  });
+});
+
+describe("When calling getSaleById", () => {
+  describe("and the sale dont exists", () => {
+    const message = { message: "Sale not found" };
+    const request = {};
+    const response = {};
+
+    before(async () => {
+      request.params = { id: 1 };
+
+      response.status = sinon.stub().returns(response);
+      response.json = sinon.stub().returns();
+
+      sinon.stub(salesModel, "getById").resolves([]);
+    });
+
+    after(async () => {
+      salesModel.getById.restore();
+    });
+
+    it("should return the status code 404", async () => {
+      await salesController.getSaleById(request, response);
+
+      expect(response.status.calledWith(404)).to.be.true;
+    });
+    it('should return the message "Sale not found"', async () => {
+      await salesController.getSaleById(request, response);
+
+      expect(response.json.calledWith(message)).to.be.true;
+    });
+  });
+  describe("and the sale exists", () => {
+    const request = {};
+    const response = {};
+
+    before(async () => {
+      request.params = { id: 1 };
+
+      response.status = sinon.stub().returns(response);
+      response.json = sinon.stub().returns();
+
+      sinon.stub(salesModel, "getById").resolves(sales.saleById);
+    });
+
+    after(async () => {
+      salesModel.getById.restore();
+    });
+    it('should return the message "Sale already exists"', async () => {
+      await salesController.getSaleById(request, response);
+
+      expect(response.json.calledWith(sales.saleById)).to.be.true;
     });
   });
 });
