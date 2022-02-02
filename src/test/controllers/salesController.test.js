@@ -268,3 +268,96 @@ describe("When calling getAllSales", () => {
     });
   });
 });
+
+describe("When calling editSale", () => {
+  describe("and succeed", () => {
+    const request = {};
+    const response = {};
+
+    before(async () => {
+      request.body = sales.correct;
+      request.params = { id: 1 };
+
+      response.status = sinon.stub().returns(response);
+      response.json = sinon.stub();
+      sinon.stub(salesModel, "getById").resolves(sales.saleById);
+      sinon.stub(salesService, "updateSale").resolves(sales.createSale);
+    });
+
+    after(async () => {
+      salesService.updateSale.restore();
+      salesModel.getById.restore();
+    });
+
+    it("should return the status code 200", async () => {
+      await salesController.editSale(request, response);
+
+      expect(response.status.calledWith(sales.createSale.code)).to.be.true;
+    });
+    it("should return the updated sales object", async () => {
+      await salesController.editSale(request, response);
+      expect(response.json.calledWith(sales.createSale.data)).to.be.true;
+    });
+  });
+
+  describe("and it fails", () => {
+    const request = {};
+    const response = {};
+
+    before(async () => {
+      request.body = sales.correct;
+      request.params = { id: 1 };
+
+      response.status = sinon.stub().returns(response);
+      response.json = sinon.stub();
+      sinon.stub(salesModel, "getById").resolves(sales.saleById);
+      sinon.stub(salesService, "updateSale").resolves(sales.createFail);
+    });
+
+    after(async () => {
+      salesService.updateSale.restore();
+      salesModel.getById.restore();
+    });
+
+    it("should return the status code 422", async () => {
+      await salesController.editSale(request, response);
+
+      expect(response.status.calledWith(sales.createFail.code)).to.be.true;
+    });
+    it("should return the message 'Such amount is not permitted to sell'", async () => {
+      await salesController.editSale(request, response);
+      expect(response.json.calledWith(sales.createFail.data)).to.be.true;
+    });
+  });
+
+  describe("and the sale were not found", () => {
+    const request = {};
+    const response = {};
+    const message = { message: "Sale not found" };
+
+    before(async () => {
+      request.body = sales.correct;
+      request.params = { id: 1 };
+
+      response.status = sinon.stub().returns(response);
+      response.json = sinon.stub();
+      sinon.stub(salesModel, "getById").resolves([]);
+      sinon.stub(salesService, "updateSale").resolves(sales.createFail);
+    });
+
+    after(async () => {
+      salesService.updateSale.restore();
+      salesModel.getById.restore();
+    });
+
+    it("should return the status code 404", async () => {
+      await salesController.editSale(request, response);
+
+      expect(response.status.calledWith(404)).to.be.true;
+    });
+    it("should return the message 'Sale not found'", async () => {
+      await salesController.editSale(request, response);
+      expect(response.json.calledWith(message)).to.be.true;
+    });
+  });
+});
