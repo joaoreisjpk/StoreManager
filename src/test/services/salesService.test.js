@@ -70,3 +70,65 @@ describe("when calling the createSale", () => {
   });
 });
 
+describe("When calling the updateSale", () => {
+  describe("and everything succeed", () => {
+    before(() => {
+      sinon.stub(productModel, "getById").resolves(product.smallProduct);
+      sinon.stub(productModel, "update").resolves();
+      sinon.stub(salesModel, "update").resolves(sales.updateSale);
+    });
+    after(() => {
+      productModel.getById.restore();
+      productModel.update.restore();
+      salesModel.update.restore();
+    });
+    it("should return the code 200, and the updatedSale", async () => {
+      const response = await salesService.updateSale(
+        1,
+        sales.smallSale,
+        product.smallProductArray
+      );
+
+      expect(response).to.be.deep.equal(sales.updateSaleSucess);
+    });
+  });
+  describe("and the stock quantity isn't enought", () => {
+    before(() => {
+      sinon.stub(productModel, "getById").resolves(product.smallProduct);
+      sinon.stub(productModel, "update").resolves();
+      sinon.stub(salesModel, "update").resolves(sales.updateSale);
+    });
+    after(() => {
+      productModel.getById.restore();
+      productModel.update.restore();
+      salesModel.update.restore();
+    });
+    it("should return the code 422, and the message: 'Such amount is not permitted to sell'", async () => {
+      const response = await salesService.updateSale(
+        1,
+        sales.bigSale,
+        product.smallProductArray
+      );
+
+      expect(response).to.be.deep.equal(sales.onFail);
+    });
+  });
+});
+
+describe("when calling deleteSale", () => {
+  describe("and everything succeed", () => {
+    before(() => {
+      sinon.stub(productModel, 'getById').resolves(product.smallProduct)
+      sinon.stub(productModel, 'update').resolves()
+    });
+    after(() => {
+      productModel.getById.restore();
+      productModel.update.restore();
+    });
+
+    it("should return void", async () => {
+      const response = await salesService.deleteSale(1, sales.smallSale)
+      expect(response).to.be.undefined
+    });
+  });
+});
