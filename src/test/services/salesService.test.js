@@ -115,3 +115,20 @@ describe("When calling the updateSale", () => {
   });
 });
 
+describe("when calling deleteSale", () => {
+  describe("and everything succeed", () => {
+    before(() => {
+      sinon.stub(productModel, 'getById').resolves(product.smallProduct)
+      sinon.stub(productModel, 'update').resolves()
+    });
+    after(() => {
+      productModel.getById.restore();
+      productModel.update.restore();
+    });
+
+    it("should return void", async () => {
+      const response = await salesService.deleteSale(1, sales.smallSale)
+      expect(response).to.be.undefined
+    });
+  });
+});
