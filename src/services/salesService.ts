@@ -1,7 +1,8 @@
 import * as salesModel from '../models/salesModel';
 import * as productModel from '../models/productModel';
+import { basicSale } from '../interfaces/ISales';
 
-const createSale = async (data) => {
+const createSale = async (data: basicSale[]) => {
   const { product_id: id, quantity: saleQuantity } = data[0];
 
   const { quantity: stockQuantity, name } = await productModel.getById(id);
@@ -20,7 +21,7 @@ const createSale = async (data) => {
   return { code: 201, data: newSale };
 };
 
-const updateSale = async (id, data, salesArray) => {
+const updateSale = async (id: number, data: basicSale[], salesArray: basicSale[]) => {
   const { product_id: productId, quantity: saleQuantity } = data[0];
 
   const { quantity: stockQuantity, name } = await productModel.getById(productId);
@@ -42,7 +43,7 @@ const updateSale = async (id, data, salesArray) => {
   return { code: 200, data: updatedSale };
 };
 
-const deleteSale = async (id, data) => {
+const deleteSale = async (id: number, data: basicSale[]) => {
   const { product_id: productId, quantity } = data[0];
 
   const { quantity: stockQuantity, name } = await productModel.getById(productId);

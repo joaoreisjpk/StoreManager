@@ -40,7 +40,7 @@ const createSale = async (req: Request, res: Response) => {
 const getSaleById = async (req: Request, res: Response):Promise<void | Response> => {
   const { id } = req.params;
 
-  const getProduct = await salesModel.getById(Number(Number(id)));
+  const getProduct = await salesModel.getById(Number(id));
 
   if (!getProduct.length) return res.status(404).json({ message: 'Sale not found' });
 
@@ -60,7 +60,7 @@ const editSale = async (req: Request, res: Response):Promise<void | Response> =>
 
   if (!salesArray.length) return res.status(404).json({ message: 'Sale not found' });
 
-  const updateSale = await salesService.updateSale(id, req.body, salesArray);
+  const updateSale = await salesService.updateSale(Number(id), req.body, salesArray);
 
   return res.status(updateSale.code).json(updateSale.data);
 };
