@@ -1,4 +1,6 @@
-const salesProductsValues = (salesArray, id) => {
+import { basicSale } from "../interfaces/ISales";
+
+const salesProductsValues = (salesArray: basicSale[], id: number) => {
   let values = '';
   salesArray.forEach(({ product_id: productId, quantity }, index) => {
     if (index) {
