@@ -41,7 +41,7 @@ const getProductListQuery = `
 const getProductList = async (): Promise<getSaleList> => {
   const [rows]: any = await connection.execute(getProductListQuery);
 
-  return rows.map(({ sale_id: saleId, ...rest }) => ({ saleId, ...rest }));
+  return rows.map(({ sale_id: saleId, ...rest }: getSaleList) => ({ saleId, ...rest }));
 };
 
 const updateQuery = `

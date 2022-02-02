@@ -26,7 +26,9 @@ const updateSale = async (id: number, data: basicSale[], salesArray: basicSale[]
 
   const { quantity: stockQuantity, name } = await productModel.getById(productId);
 
-  const { quantity } = salesArray.find((item) => item.product_id === productId);
+  const lastSaleQuantity = salesArray.find((item) => item.product_id === productId);
+
+  const quantity = Number(lastSaleQuantity?.quantity)
 
   if (stockQuantity < saleQuantity - quantity) {
     return { code: 422, data: { message: 'Such amount is not permitted to sell' } };

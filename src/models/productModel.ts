@@ -2,7 +2,7 @@ import { basicProduct, basicProductResponse } from '../interfaces/IProducts';
 import connection from './connection';
 
 const getByName = async (name: string): Promise<basicProductResponse> => {
-  const [rows] = await connection.execute('SELECT * FROM products WHERE name = ?', [name]);
+  const [rows]: any = await connection.execute('SELECT * FROM products WHERE name = ?', [name]);
 
   return rows[0];
 };

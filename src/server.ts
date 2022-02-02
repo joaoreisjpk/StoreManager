@@ -1,4 +1,4 @@
-import * as express from 'express';
+import express from 'express';
 import productRoute from './routes/products.routes';
 import salesRoute from './routes/sales.routes';
 

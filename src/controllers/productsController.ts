@@ -3,10 +3,9 @@ import {
   QuantityValidation,
   NameValidation,
 } from '../helpers/productsValidation';
-import { basicProductResponse } from '../interfaces/IProducts';
 import * as productModel from '../models/productModel';
 
-const productsValidation = async (req: Request, res: Response, next): Promise<void | Response> => {
+const productsValidation = async (req: Request, res: Response, next: NextFunction): Promise<void | Response> => {
   const { body } = req;
 
   const nameValidation = NameValidation(body.name);

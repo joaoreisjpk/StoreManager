@@ -3,11 +3,12 @@ import {
   QuantityValidation,
   ProductIdValidation,
 } from '../helpers/salesValidation';
+import { basicSale } from '../interfaces/ISales';
 import * as salesModel from '../models/salesModel';
 import * as salesService from '../services/salesService';
 
 const salesValidation = async (req: Request, res: Response, next: NextFunction): Promise<void | Response> => {
-  const { body } = req;
+  const { body }: { body: basicSale[] } = req;
 
   const productIdArray = body.map((item) => item.product_id);
   const quantityArray = body.map((item) => item.quantity);
@@ -37,7 +38,7 @@ const createSale = async (req: Request, res: Response) => {
   res.status(newProduct.code).json(newProduct.data);
 };
 
-const getSaleById = async (req: Request, res: Response):Promise<void | Response> => {
+const getSaleById = async (req: Request, res: Response): Promise<void | Response> => {
   const { id } = req.params;
 
   const getProduct = await salesModel.getById(Number(id));
@@ -53,7 +54,7 @@ const getAllSales = async (_req: Request, res: Response) => {
   res.json(getProductList);
 };
 
-const editSale = async (req: Request, res: Response):Promise<void | Response> => {
+const editSale = async (req: Request, res: Response): Promise<void | Response> => {
   const { id } = req.params;
 
   const salesArray = await salesModel.getById(Number(id));
@@ -65,14 +66,14 @@ const editSale = async (req: Request, res: Response):Promise<void | Response> =>
   return res.status(updateSale.code).json(updateSale.data);
 };
 
-const removeSale = async (req: Request, res: Response):Promise<void | Response> => {
+const removeSale = async (req: Request, res: Response): Promise<void | Response> => {
   const { id } = req.params;
 
   const getProduct = await salesModel.getById(Number(id));
 
   if (!getProduct.length) return res.status(404).json({ message: 'Sale not found' });
 
-  await salesService.deleteSale(id, getProduct);
+  await salesService.deleteSale(Number(id), getProduct);
 
   return res.json(getProduct);
 };
