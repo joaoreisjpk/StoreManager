@@ -4,7 +4,6 @@ const { expect } = require("chai");
 const salesController = require("../../controllers/salesController");
 const salesModel = require("../../models/salesModel");
 const salesService = require("../../services/salesService");
-const object = require("@hapi/joi/lib/types/object");
 
 const sales = {
   noId: [{ quantity: 2 }],
@@ -362,7 +361,7 @@ describe("When calling editSale", () => {
   });
 });
 
-describe("When calling remoSale", () => {
+describe("When calling removeSale", () => {
   describe("and succeed", () => {
     const request = {};
     const response = {};
