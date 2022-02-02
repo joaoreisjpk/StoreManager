@@ -8,4 +8,4 @@ const salesProductsValues = (salesArray, id) => {
   return values;
 };
 
-module.exports = { salesProductsValues };
+export { salesProductsValues };

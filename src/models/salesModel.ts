@@ -1,8 +1,8 @@
-const connection = require('./connection');
-const { salesProductsValues } = require('../helpers');
+import connection from'./connection';
+import { salesProductsValues } from'../helpers';
 
 const create = async (salesArray) => {
-  const [rows] = await connection.execute('INSERT INTO sales VALUES ()');
+  const [rows]: any = await connection.execute('INSERT INTO sales VALUES ()');
   await connection.execute(
     `INSERT INTO sales_products (sale_id, product_id, quantity) VALUES ${salesProductsValues(
       salesArray,
@@ -38,7 +38,7 @@ const getProductListQuery = `
 `;
 
 const getProductList = async () => {
-  const [rows] = await connection.execute(getProductListQuery);
+  const [rows]: any = await connection.execute(getProductListQuery);
 
   return rows.map(({ sale_id: saleId, ...rest }) => ({ saleId, ...rest }));
 };
@@ -61,4 +61,4 @@ const remove = async (id) => {
   await connection.execute('DELETE FROM sales WHERE id = ?', [id]);
 };
 
-module.exports = { create, getById, getProductList, update, remove };
+export { create, getById, getProductList, update, remove };

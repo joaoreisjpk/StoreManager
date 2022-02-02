@@ -25,4 +25,4 @@ function QuantityValidation(quantityArray) {
   return response || otherValidation(quantityArray);
 }
 
-module.exports = { ProductIdValidation, QuantityValidation };
+export { ProductIdValidation, QuantityValidation };

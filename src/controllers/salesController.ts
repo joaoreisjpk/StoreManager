@@ -1,9 +1,9 @@
-const {
+import {
   QuantityValidation,
   ProductIdValidation,
-} = require('../helpers/salesValidation');
-const salesModel = require('../models/salesModel');
-const salesService = require('../services/salesService');
+} from '../helpers/salesValidation';
+import * as salesModel from '../models/salesModel';
+import * as salesService from '../services/salesService';
 
 const salesValidation = async (req, res, next) => {
   const { body } = req;
@@ -39,7 +39,7 @@ const createSale = async (req, res) => {
 const getSaleById = async (req, res) => {
   const { params } = req;
 
-  const getProduct = await salesModel.getById(params.id);
+  const getProduct: any = await salesModel.getById(params.id);
 
   if (!getProduct.length) return res.status(404).json({ message: 'Sale not found' });
 
@@ -55,7 +55,7 @@ const getAllSales = async (req, res) => {
 const editSale = async (req, res) => {
   const { id } = req.params;
 
-  const salesArray = await salesModel.getById(id);
+  const salesArray: any = await salesModel.getById(id);
 
   if (!salesArray.length) return res.status(404).json({ message: 'Sale not found' });
 
@@ -67,7 +67,7 @@ const editSale = async (req, res) => {
 const removeSale = async (req, res) => {
   const { id } = req.params;
 
-  const getProduct = await salesModel.getById(id);
+  const getProduct: any = await salesModel.getById(id);
 
   if (!getProduct.length) return res.status(404).json({ message: 'Sale not found' });
 
@@ -76,4 +76,4 @@ const removeSale = async (req, res) => {
   return res.json(getProduct);
 };
 
-module.exports = { salesValidation, createSale, getSaleById, getAllSales, editSale, removeSale };
+export { salesValidation, createSale, getSaleById, getAllSales, editSale, removeSale };

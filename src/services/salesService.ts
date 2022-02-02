@@ -1,5 +1,5 @@
-const salesModel = require('../models/salesModel');
-const productModel = require('../models/productModel');
+import * as salesModel from '../models/salesModel';
+import * as productModel from '../models/productModel';
 
 const createSale = async (data) => {
   const { product_id: id, quantity: saleQuantity } = data[0];
@@ -56,4 +56,4 @@ const deleteSale = async (id, data) => {
   await salesModel.remove(id);
 };
 
-module.exports = { createSale, deleteSale, updateSale };
+export { createSale, deleteSale, updateSale };

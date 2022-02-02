@@ -1,5 +1,5 @@
-const { Router } = require('express');
-const {
+import { Router } from 'express';
+import {
   productsValidation,
   productAlreadyExists,
   createProduct,
@@ -8,7 +8,7 @@ const {
   productDontExists,
   editProduct,
   deleteProduct,
-} = require('../controllers/productsController');
+} from '../controllers/productsController';
 
 const router = Router();
 
@@ -22,4 +22,4 @@ router.put('/:id', productsValidation, productDontExists, editProduct);
 
 router.delete('/:id', productDontExists, deleteProduct);
 
-module.exports = { router };
+export default router;

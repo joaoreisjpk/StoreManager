@@ -1,4 +1,4 @@
-const connection = require('./connection');
+import connection from './connection';
 
 const getByName = async (name) => {
   const [rows] = await connection.execute('SELECT * FROM products WHERE name = ?', [name]);
@@ -19,7 +19,7 @@ const getProductList = async () => {
 };
 
 const create = async ({ name, quantity }) => {
-  const [rows] = await connection.execute(
+  const [rows]: any = await connection.execute(
     'INSERT INTO products (name, quantity) VALUES (?, ?)',
       [name, quantity],
   );
@@ -44,4 +44,4 @@ const remove = async (id) => {
   await connection.execute('DELETE FROM products WHERE id = ?', [id]);
 };
 
-module.exports = { getByName, create, getById, getProductList, update, remove };
+export { getByName, create, getById, getProductList, update, remove };

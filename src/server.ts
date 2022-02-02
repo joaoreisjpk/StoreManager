@@ -1,6 +1,6 @@
-const express = require('express');
-const { router: productRoute } = require('./routes/products.routes');
-const { router: salesRoute } = require('./routes/sales.routes');
+import * as express from 'express';
+import productRoute from './routes/products.routes';
+import salesRoute from './routes/sales.routes';
 
 require('dotenv').config();
 
@@ -21,4 +21,4 @@ app.listen(process.env.PORT, () => {
   console.log(`Escutando na porta ${process.env.PORT}`);
 });
 
-module.exports = { app };
+export { app };

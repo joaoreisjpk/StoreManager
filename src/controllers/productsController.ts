@@ -1,8 +1,8 @@
-const {
+import {
   QuantityValidation,
   NameValidation,
-} = require('../helpers/productsValidation');
-const productModel = require('../models/productModel');
+} from '../helpers/productsValidation';
+import * as productModel from '../models/productModel';
 
 const productsValidation = async (req, res, next) => {
   const { body } = req;
@@ -88,7 +88,7 @@ const deleteProduct = async (req, res) => {
   res.json(deletedProduct);
 };
 
-module.exports = {
+export {
   productsValidation,
   productAlreadyExists,
   createProduct,

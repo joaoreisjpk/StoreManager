@@ -12,4 +12,4 @@ function QuantityValidation(quantity) {
   }
 }
 
-module.exports = { NameValidation, QuantityValidation };
+export { NameValidation, QuantityValidation };
