@@ -244,3 +244,27 @@ describe("When calling getSaleById", () => {
     });
   });
 });
+
+
+describe("When calling getAllSales", () => {
+  describe("and succeed", () => {
+    const request = {};
+    const response = {};
+
+    before(async () => {
+      response.json = sinon.stub().returns();
+
+      sinon.stub(salesModel, "getProductList").resolves(sales.allSales);
+    });
+
+    after(async () => {
+      salesModel.getProductList.restore();
+    });
+
+    it("should return an array of sales objects", async () => {
+      await salesController.getAllSales(request, response);
+
+      expect(response.json.calledWith(sales.allSales)).to.be.true;
+    });
+  });
+});
