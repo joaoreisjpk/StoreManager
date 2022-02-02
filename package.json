@@ -4,8 +4,7 @@
   "description": "Simple CRUD to sales and products",
   "main": "src/server.js",
   "scripts": {
-    "test": "jest --runInBand",
-    "test:mocha": "nyc --all --include src/models --include src/services --include src/controllers mocha src/test/unit/*.js --exit",
+    "test": "nyc --all --include src/models --include src/services --include src/controllers mocha src/test/**/**/* --exit",
     "start": "node index.js",
     "dev": "nodemon src/server.js",
     "lint": "eslint --no-inline-config --no-error-on-unmatched-pattern -c .eslintrc.json . --ext .js, .jsx"
