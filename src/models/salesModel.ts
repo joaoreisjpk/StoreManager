@@ -1,7 +1,8 @@
 import connection from'./connection';
 import { salesProductsValues } from'../helpers';
+import { basicSale, createSalesResponse, getSaleId, getSaleList, updateSalesResponse } from '../interfaces/ISales';
 
-const create = async (salesArray) => {
+const create = async (salesArray: basicSale[]): Promise<createSalesResponse> => {
   const [rows]: any = await connection.execute('INSERT INTO sales VALUES ()');
   await connection.execute(
     `INSERT INTO sales_products (sale_id, product_id, quantity) VALUES ${salesProductsValues(
@@ -24,8 +25,8 @@ const getByIdQuery = `
   WHERE id = ?
 `;
 
-const getById = async (id) => {
-  const [rows] = await connection.execute(getByIdQuery, [id]);
+const getById = async (id: number): Promise<getSaleId[]> => {
+  const [rows]: any = await connection.execute(getByIdQuery, [id]);
 
   return rows;
 };
@@ -37,7 +38,7 @@ const getProductListQuery = `
   ON id = sale_id
 `;
 
-const getProductList = async () => {
+const getProductList = async (): Promise<getSaleList> => {
   const [rows]: any = await connection.execute(getProductListQuery);
 
   return rows.map(({ sale_id: saleId, ...rest }) => ({ saleId, ...rest }));
@@ -49,7 +50,7 @@ const updateQuery = `
   WHERE sale_id = ? AND product_id = ? 
 `;
 
-const update = async (saleId, data) => {
+const update = async (saleId: number, data: basicSale[]): Promise<updateSalesResponse> => {
   const { product_id: productId, quantity } = data[0];
 
   await connection.execute(updateQuery, [quantity, saleId, productId]);
@@ -57,7 +58,7 @@ const update = async (saleId, data) => {
   return { saleId, itemUpdated: data };
 };
 
-const remove = async (id) => {
+const remove = async (id: number) => {
   await connection.execute('DELETE FROM sales WHERE id = ?', [id]);
 };
 
