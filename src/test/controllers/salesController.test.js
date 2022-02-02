@@ -361,3 +361,61 @@ describe("When calling editSale", () => {
     });
   });
 });
+
+describe("When calling remoSale", () => {
+  describe("and succeed", () => {
+    const request = {};
+    const response = {};
+
+    before( async () => {
+      request.params = { id: 1 };
+
+      response.status = sinon.stub().returns(response);
+      response.json = sinon.stub().returns();
+
+      sinon.stub(salesModel, "getById").resolves(sales.saleById);
+      sinon.stub(salesService, "deleteSale").resolves();
+    });
+
+    after(async () => {
+      salesModel.getById.restore();
+      salesService.deleteSale.restore();
+    });
+
+    it("should return the updated sale object", async () => {
+      await salesController.removeSale(request, response);
+      expect(response.json.calledWith(sales.saleById)).to.be.true;
+    });
+  });
+  describe("and the sale were not found", () => {
+    const request = {};
+    const response = {};
+    const message = { message: "Sale not found" };
+
+    before(async () => {
+      request.body = sales.correct;
+      request.params = { id: 1 };
+
+      response.status = sinon.stub().returns(response);
+      response.json = sinon.stub();
+      sinon.stub(salesModel, "getById").resolves([]);
+      sinon.stub(salesService, "deleteSale").resolves();
+    });
+
+    after(async () => {
+      salesModel.getById.restore();
+      salesService.deleteSale.restore();
+    });
+
+    it("should return the status code 404", async () => {
+      await salesController.removeSale(request, response);
+
+      expect(response.status.calledWith(404)).to.be.true;
+    });
+    it("should return the message 'Sale not found'", async () => {
+      await salesController.editSale(request, response);
+      expect(response.json.calledWith(message)).to.be.true;
+    });
+  });
+});
+
