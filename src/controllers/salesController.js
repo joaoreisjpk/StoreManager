@@ -8,8 +8,8 @@ const salesService = require('../services/salesService');
 const salesValidation = async (req, res, next) => {
   const { body } = req;
 
-  const productIdArray = body.map(({ product_id: productId }) => productId);
-  const quantityArray = body.map(({ quantity }) => quantity);
+  const productIdArray = body.map((item) => item.product_id);
+  const quantityArray = body.map((item) => item.quantity);
 
   const productIdValidation = ProductIdValidation(productIdArray);
   const quantityValidation = QuantityValidation(quantityArray);

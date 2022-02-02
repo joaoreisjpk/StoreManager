@@ -2,9 +2,7 @@ const sinon = require("sinon");
 const { expect } = require("chai");
 
 const productsController = require("../../controllers/productsController");
-const salesController = require("../../controllers/salesController");
 const productModel = require("../../models/productModel");
-const object = require("@hapi/joi/lib/types/object");
 
 const product = {
   noName: { quantity: 2 },
@@ -21,7 +19,6 @@ describe("When calling productsValidation", () => {
     const response = {};
     const request = {};
     const next = sinon.stub().returns();
-    console.log('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA \n', next.calledOnce)
 
     const message = { message: '"name" is required' };
 
