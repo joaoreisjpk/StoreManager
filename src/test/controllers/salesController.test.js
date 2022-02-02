@@ -131,3 +131,62 @@ describe("When calling salesValidation", () => {
     });
   });
 });
+
+describe("When calling createSale", () => {
+  describe("and succeed", () => {
+    const request = {};
+    const response = {};
+
+    before(async () => {
+      request.body = sales.correct;
+
+      response.status = sinon.stub().returns(response);
+      response.json = sinon.stub().returns();
+
+      sinon.stub(salesService, "createSale").resolves(sales.createSale);
+    });
+
+    after(async () => {
+      salesService.createSale.restore();
+    });
+
+    it("should return the status code 201", async () => {
+      await salesController.createSale(request, response);
+
+      expect(response.status.calledWith(201)).to.be.true;
+    });
+    it("should return the new product object", async () => {
+      const newSale = await salesController.createSale(request, response);
+      console.log(newSale);
+      expect(response.json.calledWith(sales.createSale.data)).to.be.true;
+    });
+  });
+  describe("and it fails", () => {
+    const request = {};
+    const response = {};
+
+    before(async () => {
+      request.body = sales.correct;
+
+      response.status = sinon.stub().returns(response);
+      response.json = sinon.stub().returns();
+
+      sinon.stub(salesService, "createSale").resolves(sales.createFail);
+    });
+
+    after(async () => {
+      salesService.createSale.restore();
+    });
+
+    it("should return the status code 422", async () => {
+      await salesController.createSale(request, response);
+
+      expect(response.status.calledWith(422)).to.be.true;
+    });
+    it("should return the message 'Such amount is not permitted to sell'", async () => {
+      const newProduct = await salesController.createSale(request, response);
+      console.log(newProduct);
+      expect(response.json.calledWith(sales.createFail.data)).to.be.true;
+    });
+  });
+});
