@@ -1,11 +1,11 @@
-interface createSale {
+interface basicSale {
   product_id: number;
   quantity: number;
 }
 
 interface createSalesResponse {
   id: number;
-  itemSold: createSale[];
+  itemsSold: basicSale[];
 }
 
 interface getSaleList {
@@ -22,7 +22,8 @@ interface getSaleId {
 }
 
 interface updateSalesResponse {
-  id: number;
-  itemUpdated: createSale[];
+  saleId: number;
+  itemUpdated: basicSale[];
 }
 
+export { basicSale, createSalesResponse, getSaleId, getSaleList, updateSalesResponse }

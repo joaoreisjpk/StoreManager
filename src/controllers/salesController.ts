@@ -1,3 +1,4 @@
+import { NextFunction, Request, Response } from 'express';
 import {
   QuantityValidation,
   ProductIdValidation,
@@ -5,7 +6,7 @@ import {
 import * as salesModel from '../models/salesModel';
 import * as salesService from '../services/salesService';
 
-const salesValidation = async (req, res, next) => {
+const salesValidation = async (req: Request, res: Response, next: NextFunction): Promise<void | Response> => {
   const { body } = req;
 
   const productIdArray = body.map((item) => item.product_id);
@@ -28,7 +29,7 @@ const salesValidation = async (req, res, next) => {
   next();
 };
 
-const createSale = async (req, res) => {
+const createSale = async (req: Request, res: Response) => {
   const { body } = req;
 
   const newProduct = await salesService.createSale(body);
@@ -36,26 +37,26 @@ const createSale = async (req, res) => {
   res.status(newProduct.code).json(newProduct.data);
 };
 
-const getSaleById = async (req, res) => {
-  const { params } = req;
+const getSaleById = async (req: Request, res: Response):Promise<void | Response> => {
+  const { id } = req.params;
 
-  const getProduct: any = await salesModel.getById(params.id);
+  const getProduct = await salesModel.getById(Number(Number(id)));
 
   if (!getProduct.length) return res.status(404).json({ message: 'Sale not found' });
 
   return res.json(getProduct);
 };
 
-const getAllSales = async (req, res) => {
+const getAllSales = async (_req: Request, res: Response) => {
   const getProductList = await salesModel.getProductList();
 
   res.json(getProductList);
 };
 
-const editSale = async (req, res) => {
+const editSale = async (req: Request, res: Response):Promise<void | Response> => {
   const { id } = req.params;
 
-  const salesArray: any = await salesModel.getById(id);
+  const salesArray = await salesModel.getById(Number(id));
 
   if (!salesArray.length) return res.status(404).json({ message: 'Sale not found' });
 
@@ -64,10 +65,10 @@ const editSale = async (req, res) => {
   return res.status(updateSale.code).json(updateSale.data);
 };
 
-const removeSale = async (req, res) => {
+const removeSale = async (req: Request, res: Response):Promise<void | Response> => {
   const { id } = req.params;
 
-  const getProduct: any = await salesModel.getById(id);
+  const getProduct = await salesModel.getById(Number(id));
 
   if (!getProduct.length) return res.status(404).json({ message: 'Sale not found' });
 
